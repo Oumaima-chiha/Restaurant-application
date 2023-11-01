@@ -3,12 +3,13 @@ import { View, Text, Image, StyleSheet } from 'react-native';
 import { Display } from "../utils";
 
 export default function RestaurantCard({ restaurant }) {
-  const { name, image, rating, status } = restaurant;
+  const { name, image, category, rating, status } = restaurant;
 
   return (
     <View style={styles.cardContainer}>
       <Image source={image} style={styles.cardImage} />
       <Text style={styles.cardName}>{name}</Text>
+      <Text style={styles.cardCategory}>{category}</Text>
       <Text style={styles.cardRating}>{`Rating: ${rating}`}</Text>
       <Text style={styles.cardStatus}>{status}</Text>
     </View>
@@ -35,5 +36,10 @@ const styles = StyleSheet.create({
   },
   cardStatus: {
     color: 'green',
+    paddingLeft: 330,
+    
   },
+  cardCategory: {
+    color: 'gray',
+  }
 });

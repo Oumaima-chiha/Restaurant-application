@@ -9,6 +9,7 @@ export default function HomeScreen() {
     {
       name: 'Restaurant 1',
       image: require('./../assets/images/logo.png'),
+      category:'Italian',
       rating: 4.5,
       status: 'Open',
     },
