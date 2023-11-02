@@ -3,12 +3,20 @@ import { View, Text, Image, StyleSheet } from 'react-native';
 import { Display } from "../utils";
 
 
-export default function RestaurantCard({ restaurant }) {
+
+
+export default function RestaurantCard({ restaurant, navigation }) {
+
+  const handleButtonPress = () => {
+    navigation.navigate("Logo")
+  };
+
+
   const { name, main_image, category, rating, status  } = restaurant;
 
   return (
-      < View style={styles.cardContainer}>
-      <Image source={{uri:main_image}} style={styles.cardImage} />
+      < View style={styles.cardContainer} onPress={handleButtonPress}>
+      <Image source={{uri:main_image}} style={styles.cardImage}  />
       <Text style={styles.cardName}>{name}</Text>
       <Text style={styles.cardCategory}>{category}</Text>
       <Text style={styles.cardRating}>{`Rating: ${rating}`}</Text>
