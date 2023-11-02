@@ -1,26 +1,24 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet,TouchableOpacity} from 'react-native';
 import { Display } from "../utils";
 
 
 
 
-export default function RestaurantCard({ restaurant, navigation }) {
-
-  const handleButtonPress = () => {
-    navigation.navigate("Logo")
-  };
+export default function RestaurantCard({ restaurant, onPress  }) {
 
 
   const { name, main_image, category, rating, status  } = restaurant;
 
   return (
-      < View style={styles.cardContainer} onPress={handleButtonPress}>
+    <TouchableOpacity onPress={onPress}>
+      < View style={styles.cardContainer} >
       <Image source={{uri:main_image}} style={styles.cardImage}  />
       <Text style={styles.cardName}>{name}</Text>
       <Text style={styles.cardCategory}>{category}</Text>
       <Text style={styles.cardRating}>{`Rating: ${rating}`}</Text>
       </View>
+      </TouchableOpacity>
 
   );
 }

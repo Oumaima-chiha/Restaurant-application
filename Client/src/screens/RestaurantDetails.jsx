@@ -1,21 +1,31 @@
-import { StyleSheet, Text, View } from 'react-native'
+import React from 'react';
+import { StyleSheet, Text, View, Image, Dimensions , FlatList ,ScrollView} from 'react-native';
 import { Colors, Images } from "../contants";
-import React from 'react'
 
-
-export default function componentName() {
+export default function RestaurantDetails({ }) {
   return (
-    <View style={styles.container}>
-      <Text></Text>
-     </View>
+    <ScrollView
+    vertical
+    style={styles.container}
+    showsVerticalScrollIndicator={false}
+    contentContainerStyle={styles.scrollViewFlex}
+  >
+<Image source={Images.TEST} style={styles.image} />
+      <Text style={styles.name}>restaurant name</Text>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor:Colors.primaryBlackHex
-    },
-})
+  container: {
+    flex: 1,
+    backgroundColor: Colors.primaryBlackHex,
+  },
+  image: {
+    width: Dimensions.get('window').width,
+    height: 250, 
+  },
+  name:{
+    color:Colors.DEFAULT_WHITE
+  }
+});
