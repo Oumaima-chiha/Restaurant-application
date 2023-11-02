@@ -16,7 +16,6 @@ export default function Splashscreen({navigation}) {
 
   const handleButtonPress = () => {
     setButtonPressed(true);
-    // Handle the "Get Started" button press here
     navigation.navigate("TabNav")
   };
 

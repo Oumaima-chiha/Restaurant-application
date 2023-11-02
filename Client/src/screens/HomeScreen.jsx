@@ -11,11 +11,17 @@ import { Colors } from "../contants";
 import { AntDesign } from "@expo/vector-icons";
 import RestaurantCard from "./RestaurantCard";
 
-export default function HomeScreen() {
+export default function HomeScreen({navigation}) {
   const [restaurant, setRestaurant] = useState([]);
+
+  const handleButtonPress = (restaurantId) => {
+    navigation.navigate("RestaurantDetails", restaurantId )
+  };
+
+
   const fetchData = async () => {
     try {
-      const response = await fetch("http://172.29.0.13:3000/api/restaurants");
+      const response = await fetch("http://192.168.137.140:3000/api/restaurants");
       if (response.ok) {
         const data = await response.json();
         console.log(data);
@@ -31,16 +37,6 @@ export default function HomeScreen() {
   React.useEffect(() => {
     fetchData();
   }, []);
-  const restaurants = [
-    {
-      name: "Restaurant 1",
-      image: require("./../assets/images/logo.png"),
-      category: "Italian",
-      rating: 4.5,
-      status: "Open",
-    },
-  ];
-
   return (
     <ScrollView
       vertical
@@ -87,8 +83,8 @@ export default function HomeScreen() {
       <ScrollView vertical>
         {
           restaurant.map((rest) => (
-            <View key={rest.id} style={styles.cardContainer}>
-              <RestaurantCard restaurant={rest} />
+            <View key={rest.id} >
+              <RestaurantCard restaurant={rest} onPress={() => handleButtonPress(rest.id)} />
             </View>
           ))}
       </ScrollView>
