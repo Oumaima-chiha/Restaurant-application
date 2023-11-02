@@ -7,4 +7,5 @@ import ReservationListScreen from "./ReservationListScreen";
 import TabNavigator from "../navigators/TabNavigator";
 import RestaurantCard from "./RestaurantCard";
 
-export { Splashscreen , Homescreen , Logo, MessagesScreen,LoginScreen, ReservationListScreen, TabNavigator, RestaurantCard }  
+
+export { Splashscreen , Homescreen , Logo, MessagesScreen,LoginScreen, ReservationListScreen, TabNavigator, RestaurantCard }
