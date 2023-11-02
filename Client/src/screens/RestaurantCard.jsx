@@ -4,7 +4,7 @@ import { Display } from "../utils";
 
 
 export default function RestaurantCard({ restaurant }) {
-  const { name, main_image, category, rating,status  } = restaurant;
+  const { name, main_image, category, rating, status  } = restaurant;
 
   return (
       < View style={styles.cardContainer}>
