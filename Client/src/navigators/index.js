@@ -12,6 +12,8 @@ const Navigators = () => {
                 <Stack.Screen name="Logo" component={Logo} />
                 <Stack.Screen name="Splash" component={Splashscreen} />
                 <Stack.Screen name="TabNav" component={TabNavigator} />
+             
+             
             </Stack.Navigator>
         </NavigationContainer>
     )
