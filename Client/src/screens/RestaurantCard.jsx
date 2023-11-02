@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   },
   cardStatus: {
     color: 'green',
-    paddingLeft: 330,
+    paddingLeft: 300,
     
   },
   cardCategory: {
