@@ -1,21 +1,42 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView } from 'react-native';
-import { Colors } from '../contants';
-import { AntDesign } from '@expo/vector-icons';
-import RestaurantCard from './RestaurantCard';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+  ScrollView,
+} from "react-native";
+import { Colors } from "../contants";
+import { AntDesign } from "@expo/vector-icons";
+import RestaurantCard from "./RestaurantCard";
 
-export default function HomeScreen() {
-  const restaurants = [
-    {
-      name: 'Restaurant 1',
-      image: require('./../assets/images/logo.png'),
-      category:'Italian',
-      rating: 4.5,
-      status: 'Open',
-    },
-   
-  ];
+export default function HomeScreen({navigation}) {
+  const [restaurant, setRestaurant] = useState([]);
 
+  const handleButtonPress = (restaurantId) => {
+    navigation.navigate("RestaurantDetails", restaurantId )
+  };
+
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch("http://192.168.137.140:3000/api/restaurants");
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+        setRestaurant(data);
+      } else {
+        console.error("Failed to fetch data");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchData();
+  }, []);
   return (
     <ScrollView
       vertical
@@ -25,17 +46,33 @@ export default function HomeScreen() {
     >
       <View>
         <View>
-          <Text style={styles.screenTitle}>Find the best{'\n'}restaurant near you.</Text>
+          <Text style={styles.screenTitle}>
+            Find the best{"\n"}restaurant near you.
+          </Text>
         </View>
         <View style={styles.InputContainer}>
           <TouchableOpacity onPress={() => {}}>
-            <AntDesign name="search1" size={24} color={Colors.DEFAULT_RED} style={styles.search} />
+            <AntDesign
+              name="search1"
+              size={24}
+              color={Colors.DEFAULT_RED}
+              style={styles.search}
+            />
           </TouchableOpacity>
-          <TextInput placeholder="Find a restaurant..." value={{}} placeholderTextColor={Colors.primaryLightGreyHex} style={styles.TextInputContainer} />
+          <TextInput
+            placeholder="Find a restaurant..."
+            value={{}}
+            placeholderTextColor={Colors.primaryLightGreyHex}
+            style={styles.TextInputContainer}
+          />
         </View>
       </View>
       <View>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.CategoryScrollViewStyle}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.CategoryScrollViewStyle}
+        >
           <View style={styles.ActiveCategory}>
             <TouchableOpacity style={styles.CategoryStyleView}>
               <Text style={styles.CategoryText}>category 1</Text>
@@ -44,9 +81,12 @@ export default function HomeScreen() {
         </ScrollView>
       </View>
       <ScrollView vertical>
-      <View style={styles.cardContainer}>
-        <RestaurantCard restaurant={restaurants[0]} />
-      </View>
+        {
+          restaurant.map((rest) => (
+            <View key={rest.id} >
+              <RestaurantCard restaurant={rest} onPress={() => handleButtonPress(rest.id)} />
+            </View>
+          ))}
       </ScrollView>
     </ScrollView>
   );
@@ -55,7 +95,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.SECONDARY_BLACK
+    backgroundColor: Colors.SECONDARY_BLACK,
   },
   screenTitle: {
     fontSize: 25,
@@ -68,40 +108,34 @@ const styles = StyleSheet.create({
     width: 300,
   },
   InputContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     margin: 30,
     borderRadius: 10,
-    backgroundColor: '#A9A9A9',
-    alignItems: 'center',
+    backgroundColor: "#A9A9A9",
+    alignItems: "center",
     top: 100,
-    marginBottom:110
+    marginBottom: 110,
   },
   search: {
     marginHorizontal: 10,
   },
   scrollViewFlex: {
     flex: 1,
-    
   },
   CategoryScrollViewStyle: {
     paddingHorizontal: 10,
-    
-    
   },
   ActiveCategory: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: 20,
-    
   },
   CategoryText: {
     color: Colors.primaryWhiteHex,
     margin: 10,
-    padding:10,
-    backgroundColor:Colors.DEFAULT_GREEN
+    padding: 10,
+    backgroundColor: Colors.DEFAULT_GREEN,
   },
   CategoryStyleView: {
     flex: 1,
-    
-    
   },
 });

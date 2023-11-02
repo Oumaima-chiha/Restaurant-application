@@ -1,18 +1,25 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet,TouchableOpacity} from 'react-native';
 import { Display } from "../utils";
 
-export default function RestaurantCard({ restaurant }) {
-  const { name, image, category, rating, status } = restaurant;
+
+
+
+export default function RestaurantCard({ restaurant, onPress  }) {
+
+
+  const { name, main_image, category, rating, status  } = restaurant;
 
   return (
-    <View style={styles.cardContainer}>
-      <Image source={image} style={styles.cardImage} />
+    <TouchableOpacity onPress={onPress}>
+      < View style={styles.cardContainer} >
+      <Image source={{uri:main_image}} style={styles.cardImage}  />
       <Text style={styles.cardName}>{name}</Text>
       <Text style={styles.cardCategory}>{category}</Text>
       <Text style={styles.cardRating}>{`Rating: ${rating}`}</Text>
-      <Text style={styles.cardStatus}>{status}</Text>
-    </View>
+      </View>
+      </TouchableOpacity>
+
   );
 }
 
@@ -36,7 +43,7 @@ const styles = StyleSheet.create({
   },
   cardStatus: {
     color: 'green',
-    paddingLeft: 330,
+    paddingLeft: 300,
     
   },
   cardCategory: {
