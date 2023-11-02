@@ -8,4 +8,4 @@ import TabNavigator from "../navigators/TabNavigator";
 import RestaurantCard from "./RestaurantCard";
 import RestaurantDetails from "./RestaurantDetails";
 
-export { Splashscreen , Homescreen , Logo, MessagesScreen,LoginScreen, ReservationListScreen, TabNavigator, RestaurantCard ,RestaurantDetails }
+export { Splashscreen , Homescreen , Logo, MessagesScreen,LoginScreen,  TabNavigator, RestaurantCard ,RestaurantDetails,ReservationListScreen}
