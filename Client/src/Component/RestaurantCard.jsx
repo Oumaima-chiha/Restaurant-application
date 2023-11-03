@@ -13,7 +13,7 @@ export default function RestaurantCard({ restaurant, onPress  }) {
   return (
     <TouchableOpacity onPress={onPress}>
       < View style={styles.cardContainer} >
-      <Image source={{uri:main_image}} style={styles.cardImage}  />
+      <Image source={{uri:main_image.trim()}} style={styles.cardImage}  />
       <Text style={styles.cardName}>{name}</Text>
       <Text style={styles.cardCategory}>{category}</Text>
       <Text style={styles.cardRating}>{`Rating: ${rating}`}</Text>

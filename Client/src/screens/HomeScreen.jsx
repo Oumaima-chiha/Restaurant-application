@@ -21,10 +21,9 @@ export default function HomeScreen({navigation}) {
 
   const fetchData = async () => {
     try {
-      const response = await fetch("http://172.16.0.59:3000/api/restaurants");
+      const response = await fetch("http://192.168.137.37:3000/api/restaurants");
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
         setRestaurant(data);
       } else {
         console.error("Failed to fetch data");
@@ -61,7 +60,6 @@ export default function HomeScreen({navigation}) {
           </TouchableOpacity>
           <TextInput
             placeholder="Find a restaurant..."
-            value={{}}
             placeholderTextColor={Colors.primaryLightGreyHex}
             style={styles.TextInputContainer}
           />
