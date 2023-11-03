@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Colors } from "../contants";
 import { AntDesign } from "@expo/vector-icons";
-import RestaurantCard from "./RestaurantCard";
+import RestaurantCard from "../Component/RestaurantCard";
 
 export default function HomeScreen({navigation}) {
   const [restaurant, setRestaurant] = useState([]);
@@ -21,7 +21,7 @@ export default function HomeScreen({navigation}) {
 
   const fetchData = async () => {
     try {
-      const response = await fetch("http://192.168.137.140:3000/api/restaurants");
+      const response = await fetch("http://172.16.0.59:3000/api/restaurants");
       if (response.ok) {
         const data = await response.json();
         console.log(data);
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   scrollViewFlex: {
-    flex: 1,
+   
   },
   CategoryScrollViewStyle: {
     paddingHorizontal: 10,

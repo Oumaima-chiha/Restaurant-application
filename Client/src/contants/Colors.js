@@ -34,4 +34,13 @@ export default {
     primaryWhiteHex: '#FFFFFF',
     primaryBlackRGBA: 'rgba(12,15,20,0.5)',
     secondaryBlackRGBA: 'rgba(0,0,0,0.7)',
+    colorWhite: "#fff",
+    colorTomato: "#fb5757",
+    colorBlack: "#000",
+    colorRed: "#ff0000",
+    colorSilver: "#c8c8c8",
+    bodyText: "#868686",
+    mainColor: "#010f07",
+    colorGray_100: "rgba(0, 0, 0, 0.47)",
+    colorForestgreen: "#00a446",
   };
