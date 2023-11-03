@@ -31,6 +31,7 @@ const Navigators = () => {
           component={VerificationCodeScreen}
         />
         <Stack.Screen name="NewPasswordScreen" component={NewPasswordScreen} />
+
         <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
       </Stack.Navigator>
     </NavigationContainer>

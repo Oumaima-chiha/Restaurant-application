@@ -12,6 +12,8 @@ import VerificationCodeScreen from "./VerificationCodeScreen";
 import NewPasswordScreen from "./NewPasswordScreen.jsx";
 import RegisterScreen from "./RegisterScreen.jsx"
 
+
+
 export {
   Splashscreen,
   Homescreen,
@@ -25,5 +27,5 @@ export {
   ForgetPasswordEmail,
   VerificationCodeScreen,
   NewPasswordScreen,
-  RegisterScreen
+  RegisterScreen,
 };
