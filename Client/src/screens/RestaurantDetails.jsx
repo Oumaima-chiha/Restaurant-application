@@ -40,15 +40,17 @@ export default function RestaurantDetails({ route }) {
         <View style={styles.iconContainer}>
           <Text style={styles.name}>{name}</Text>
           <Text style={styles.category}></Text>
+          <Button title="Menu" onPress={() => navigation.navigate("")} >
 
-          <Text style={styles.description}>{description}</Text>
-          {menu_images.map((menuImage, index) => (
+          <Text style={styles.InfoTitle}>{description}</Text> 
+         {menu_images.map((menuImage, index) => (
             <Image
               key={index}
               source={{ uri: menuImage }}
               style={styles.menuImage}
             />
           ))}
+          </Button>
           <Text style={styles.rating}>{`Rating: ${rating}`}</Text>
           <Text
             style={styles.openingHours}
@@ -104,5 +106,11 @@ const styles = StyleSheet.create({
     padding: 30,
     display: "flex",
     borderRadius: 80,
+  },
+  InfoTitle: {
+    fontFamily: FONTFAMILY.poppins_semibold,
+    fontSize: FONTSIZE.size_16,
+    color: COLORS.primaryWhiteHex,
+    marginBottom: SPACING.space_10,
   },
 });
