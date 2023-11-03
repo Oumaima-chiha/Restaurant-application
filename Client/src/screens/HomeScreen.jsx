@@ -11,21 +11,20 @@ import { Colors } from "../contants";
 import { AntDesign } from "@expo/vector-icons";
 import RestaurantCard from "../Component/RestaurantCard";
 
-export default function HomeScreen({navigation}) {
+export default function HomeScreen({ navigation }) {
   const [restaurant, setRestaurant] = useState([]);
 
 
   const handleButtonPress = (restaurant) => {
-    navigation.navigate("RestaurantDetails", {restaurant});
+    navigation.navigate("RestaurantDetails", { restaurant });
     console.log(restaurant)
   };
-  
+
   const fetchData = async () => {
     try {
-      const response = await fetch("http://192.168.137.254:3000/api/restaurants");
+      const response = await fetch("http://172.20.0.212:3000/api/restaurants");
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
         setRestaurant(data);
       } else {
         console.error("Failed to fetch data");
@@ -52,7 +51,7 @@ export default function HomeScreen({navigation}) {
           </Text>
         </View>
         <View style={styles.InputContainer}>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={() => { }}>
             <AntDesign
               name="search1"
               size={24}
@@ -121,7 +120,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   scrollViewFlex: {
-   
+
   },
   CategoryScrollViewStyle: {
     paddingHorizontal: 10,
