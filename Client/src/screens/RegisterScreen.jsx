@@ -15,7 +15,7 @@ const RegisterScreen = ({ navigation }) => {
   const handleChange = (name, value) => {
     setInputs((values) => ({ ...values, [name]: value }));
 
-    if (  (name === 'firstName' || name === 'lastName') && inputs.firstName && inputs.lastName) {
+    if ((name === 'firstName' || name === 'lastName') && inputs.firstName && inputs.lastName) {
       setInputs((values) => ({ ...values, fullname: `${values.firstName} ${values.lastName}` }));
     }
   };
