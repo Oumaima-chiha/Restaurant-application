@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     height: 250,
   },
   name: {
-    fontSize: 25,
+  
     color: "White",
     fontWeight: "bold",
     alignItems: "center",
@@ -107,10 +107,5 @@ const styles = StyleSheet.create({
     display: "flex",
     borderRadius: 80,
   },
-  InfoTitle: {
-    fontFamily: FONTFAMILY.poppins_semibold,
-    fontSize: FONTSIZE.size_16,
-    color: COLORS.primaryWhiteHex,
-    marginBottom: SPACING.space_10,
-  },
+
 });

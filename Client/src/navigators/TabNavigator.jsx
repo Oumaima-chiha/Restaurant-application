@@ -17,6 +17,7 @@ screenOptions={{
     tabBarHideOnKeyboard:true, 
     tabBarShowLabel:false, 
     tabBarStyle:styles.tabBarStyle,
+
     
     topBarBackground:()=>(
         <BlurView overlayColor='' blurAmount={15} style={styles.BlurViewStyles}/>
@@ -34,15 +35,18 @@ screenOptions={{
         )
     }}></Tab.Screen>
     <Tab.Screen name="Messages" component={MessagesScreen} options={{
+
         tabBarIcon: ({focused, color, size}) => (
             <AntDesign name="message1" size={24} color={focused?Colors.DEFAULT_RED : Colors.primaryLightGreyHex}/>
         )
     }}></Tab.Screen>
-    <Tab.Screen name="Login" component={LoginScreen} options={{
+    <Tab.Screen name="Login" component={LoginScreen}  options={{
+        
         tabBarIcon: ({focused, color, size}) => (
             <AntDesign name="login" size={24} color={focused?Colors.DEFAULT_RED : Colors.primaryLightGreyHex}/>
+            
         )
-    }}></Tab.Screen>
+    }} ></Tab.Screen>
     
 </Tab.Navigator>
   )
