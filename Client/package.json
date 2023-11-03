@@ -17,12 +17,7 @@
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.16",
     "@react-navigation/stack": "^6.3.20",
-<<<<<<< HEAD
     "expo": "^49.0.0",
-=======
-    "axios": "^1.6.0",
-    "expo": "~49.0.15",
->>>>>>> 2722e81b2621dd871042f409e8e9830e0aac54fe
     "expo-asset": "~8.10.1",
     "expo-font": "~11.4.0",
     "expo-image": "~1.3.4",
@@ -38,12 +33,8 @@
     "react-native-screens": "~3.22.0",
     "react-native-toast-message": "^2.1.7",
     "react-native-vector-icons": "^10.0.1",
-<<<<<<< HEAD
-    "react-native-web": "~0.19.6"
-=======
     "react-native-web": "~0.19.6",
     "react-toastify": "^9.1.3"
->>>>>>> 2722e81b2621dd871042f409e8e9830e0aac54fe
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
