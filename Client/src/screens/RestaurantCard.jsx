@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   },
   cardStatus: {
     color: 'green',
-    // Adjust the styling as needed
+  
     paddingTop: 5,
     fontSize: 16,
   },
