@@ -22,10 +22,9 @@ export default function HomeScreen({ navigation }) {
 
   const fetchData = async () => {
     try {
-      const response = await fetch("http://192.168.137.211:3000/api/restaurants");
+      const response = await fetch("http://172.20.0.212:3000/api/restaurants");
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
         setRestaurant(data);
       } else {
         console.error("Failed to fetch data");

@@ -10,7 +10,7 @@ const RegisterScreen = ({ navigation }) => {
   const handleChange = (name, value) => {
     setInputs((values) => ({ ...values, [name]: value }));
 
-    if (  (name === 'firstName' || name === 'lastName') && inputs.firstName && inputs.lastName) {
+    if ((name === 'firstName' || name === 'lastName') && inputs.firstName && inputs.lastName) {
       setInputs((values) => ({ ...values, fullname: `${values.firstName} ${values.lastName}` }));
     }
   };
@@ -38,7 +38,7 @@ const RegisterScreen = ({ navigation }) => {
   const handleSubmit = async () => {
     if (validator()) {
       try {
-        const { data } = await axios.post('http://172.16.0.59:3000/api/customers/', inputs);
+        const { data } = await axios.post('http://172.20.0.212:3000/api/customers/', inputs);
         console.log('User added successfully', data);
         Toast.show({
           type: 'success',
