@@ -15,7 +15,7 @@ export default function HomeScreen() {
   const [restaurant, setRestaurant] = useState([]);
   const fetchData = async () => {
     try {
-      const response = await fetch("http://172.29.0.13:3000/api/restaurants");
+      const response = await fetch("http://192.168.137.211:3000/api/restaurants");
       if (response.ok) {
         const data = await response.json();
         console.log(data);
@@ -55,7 +55,7 @@ export default function HomeScreen() {
           </Text>
         </View>
         <View style={styles.InputContainer}>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={() => { }}>
             <AntDesign
               name="search1"
               size={24}
