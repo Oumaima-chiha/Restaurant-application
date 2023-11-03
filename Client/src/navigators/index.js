@@ -1,7 +1,7 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { Splashscreen, Homescreen, Logo, MessagesScreen, LoginScreen,ReservationListScreen , TabNavigator} from "../screens"; 
+import { Splashscreen, Logo , TabNavigator , RestaurantDetails,ReservationListScreen} from "../screens"; 
 
 const Stack = createStackNavigator();
 
@@ -12,8 +12,10 @@ const Navigators = () => {
                 <Stack.Screen name="Logo" component={Logo} />
                 <Stack.Screen name="Splash" component={Splashscreen} />
                 <Stack.Screen name="TabNav" component={TabNavigator} />
+                <Stack.Screen name="RestaurantDetails" component={RestaurantDetails} />
+                <Stack.Screen name="ReservationListScreen" component={ReservationListScreen} />
              
-             
+        
             </Stack.Navigator>
         </NavigationContainer>
     )
