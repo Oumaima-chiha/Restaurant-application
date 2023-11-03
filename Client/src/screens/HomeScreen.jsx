@@ -14,10 +14,11 @@ import RestaurantCard from "../Component/RestaurantCard";
 export default function HomeScreen({ navigation }) {
   const [restaurant, setRestaurant] = useState([]);
 
-  const handleButtonPress = (restaurantId) => {
-    navigation.navigate("RestaurantDetails", restaurantId)
-  };
 
+  const handleButtonPress = (restaurant) => {
+    navigation.navigate("RestaurantDetails", { restaurant });
+    console.log(restaurant)
+  };
 
   const fetchData = async () => {
     try {
@@ -84,7 +85,7 @@ export default function HomeScreen({ navigation }) {
         {
           restaurant.map((rest) => (
             <View key={rest.id} >
-              <RestaurantCard restaurant={rest} onPress={() => handleButtonPress(rest.id)} />
+              <RestaurantCard restaurant={rest} onPress={(restaurant) => handleButtonPress(restaurant)} />
             </View>
           ))}
       </ScrollView>
