@@ -14,14 +14,15 @@ import RestaurantCard from "../Component/RestaurantCard";
 export default function HomeScreen({navigation}) {
   const [restaurant, setRestaurant] = useState([]);
 
-  const handleButtonPress = (restaurantId) => {
-    navigation.navigate("RestaurantDetails", restaurantId )
+
+  const handleButtonPress = (restaurant) => {
+    navigation.navigate("RestaurantDetails", {restaurant});
+    console.log(restaurant)
   };
-
-
+  
   const fetchData = async () => {
     try {
-      const response = await fetch("http://172.16.0.59:3000/api/restaurants");
+      const response = await fetch("http://192.168.137.254:3000/api/restaurants");
       if (response.ok) {
         const data = await response.json();
         console.log(data);
@@ -84,7 +85,7 @@ export default function HomeScreen({navigation}) {
         {
           restaurant.map((rest) => (
             <View key={rest.id} >
-              <RestaurantCard restaurant={rest} onPress={() => handleButtonPress(rest.id)} />
+              <RestaurantCard restaurant={rest} onPress={(restaurant) => handleButtonPress(restaurant)} />
             </View>
           ))}
       </ScrollView>
