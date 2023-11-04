@@ -27,8 +27,10 @@ export default function LoginScreen({ navigation }) {
   };
 
   const validator = () => {
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(inputs.email)) {
+
       return false;
     }
     return true;
@@ -37,14 +39,15 @@ export default function LoginScreen({ navigation }) {
   const handleSubmit = async () => {
     if (validator()) {
       try {
+
         const { data } = await axios.post('http://192.168.1.183:3000/api/customers/signin', inputs);
         console.log('Customer logged in successfully', data);
 
         setShowToast1(true);
         if (toastRef.current) {
           toastRef.current.show();
-        }
-      
+        }      
+
       } catch (error) {
         setShowToast(true);
         if (toastRef.current) {
@@ -124,8 +127,9 @@ export default function LoginScreen({ navigation }) {
           </TouchableOpacity>
         </View>
       </View>
+
     </SafeAreaView>
-  );
+ );
 }
 
 const styles = StyleSheet.create({
