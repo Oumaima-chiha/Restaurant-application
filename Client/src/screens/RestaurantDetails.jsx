@@ -9,7 +9,8 @@ import {
   TextInput,
   TouchableOpacity,
   Dimensions,
-  Modal
+  Modal,
+  Pressable,
 } from "react-native";
 import { Display } from "../utils";
 import { useNavigation } from "@react-navigation/native";
@@ -18,12 +19,15 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { useState } from "react";
 import { Colors } from '../contants';
 import { FontSize, FontFamily, Color, Border, Padding } from "../../GlobalStyles";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
 
 
 export default function RestaurantDetails({ route }) {
 
   const [showForm, setShowForm] = useState(false)
   const [reservation, setReservation] = useState({ date: new Date(Date.now()), time: '', guest_number: 0 })
+  const [mode, setMode] = useState('date')
+  const [showDateTime, setShowDateTime] = useState(false)
 
 
   const {
@@ -35,18 +39,34 @@ export default function RestaurantDetails({ route }) {
     opening_time,
     closing_time,
   } = route.params.restaurant;
-  console.log(route.params.restaurant);
+
 
 
   const navigation = useNavigation();
 
+  const hideDateTime = () => {
+    setShowDateTime(false)
+  }
 
-  const handleChange = (e) => {
 
-    const value = e.target.value
-    const name = e.target.name
+  const handleDateChange = (event, selectedDate) => {
+    const currentDate = selectedDate || new Date()
+    setReservation((inputs) => ({ ...inputs, [mode]: currentDate }))
 
-    setReservation({ ...reservation, [name]: value })
+    if (event.type === 'set') {
+
+      console.log('Selected date:', new Date(currentDate));
+      hideDateTime()
+
+    }
+    hideDateTime()
+
+  }
+
+  const handleChange = (name, value) => {
+
+
+    setReservation((inputs) => ({ ...inputs, [name]: value }))
 
 
   }
@@ -54,6 +74,14 @@ export default function RestaurantDetails({ route }) {
   const toggleForm = () => {
 
     setShowForm(!showForm)
+  }
+
+
+  const toggleDateTime = (mode) => {
+
+    setMode(mode)
+    setShowDateTime(true)
+
   }
 
   return (
@@ -68,9 +96,8 @@ export default function RestaurantDetails({ route }) {
         >
           <Image source={{ uri: main_image }} style={styles.image} />
         </View>
-        {showForm && <Modal transparent={true} visible={true} >
-          <TouchableOpacity style={{ backgroundColor: '#000000aa', flex: 1 }} onPress={toggleForm}>
 
+<<<<<<< HEAD
             <View style={{ backgroundColor: "#ffffff", margin: 50, padding: 40, borderRadius: 10, top: 250, height: 250 }}
             >
 
@@ -103,6 +130,8 @@ export default function RestaurantDetails({ route }) {
 
 
         </Modal>}
+=======
+>>>>>>> c59cdc5bd703085c868830da7358b13f9e6ff5f2
 
         <View style={styles.iconContainer}>
           <Text style={styles.name}>{name}</Text>
@@ -123,6 +152,46 @@ export default function RestaurantDetails({ route }) {
           >{`Opening Hours: ${opening_time} - ${closing_time}`}</Text>
           <Button title="Go Back" onPress={() => navigation.goBack()} />
           <Button title="Make A reservation " onPress={toggleForm} />
+          {showForm && <Modal transparent={true} visible={true} >
+
+            <TouchableOpacity style={{ backgroundColor: '#000000aa', flex: 1 }} onPress={toggleForm}>
+
+              <View style={{ backgroundColor: Colors.DARK_ONE, margin: 20, padding: 40, borderRadius: 10, top: 250, height: 350, justifyContent: "space-between" }}
+              >
+                <KeyboardAwareScrollView>
+
+                  <Pressable style={styles.btn} onPress={() => { toggleDateTime("date") }} ><Text style={styles.btnText}>Date</Text></Pressable>
+                  <Pressable style={styles.btn} onPress={() => { toggleDateTime("time") }}><Text style={styles.btnText}>Time</Text></Pressable>
+
+                  {showDateTime && <DateTimePicker
+                    mode={mode}
+                    value={new Date()}
+                    is24Hour={true}
+                    confirmBtnText="Confirm"
+                    display="default"
+                    timeZoneName={'Africa/Tunis'}
+                    onChange={handleDateChange}
+                  />}
+                  <Text style={{ fontSize: 25, color: "#ffffff" }}>Guests</Text>
+                  <TextInput
+                    keyboardType="numeric"
+                    onChangeText={(text) => handleChange('guest_number', text)}
+                    style={styles.inputControlGuest}
+
+                  />
+                </KeyboardAwareScrollView>
+
+                <Pressable style={styles.btn} onPress={() => {
+                  console.log(reservation.date.toISOString().slice(0, 10), new Date(reservation.time), reservation.guest_number)
+                }} ><Text style={styles.btnText}>Submit</Text></Pressable>
+
+
+              </View>
+            </TouchableOpacity>
+
+
+
+          </Modal>}
         </View>
       </View>
     </SafeAreaView>
@@ -137,13 +206,51 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     display: "flex",
   },
+  inputControl: {
+    height: 25,
+    backgroundColor: Colors.DEFAULT_WHITE,
+    borderColor: Colors.DEFAULT_RED,
+    borderWidth: 1,
+    paddingHorizontal: 16,
+    fontSize: 15,
+    fontWeight: '500',
+    color: Colors.DEFAULT_WHITE,
+  },
+  inputControlGuest: {
+    height: 25,
+    backgroundColor: Colors.DEFAULT_WHITE,
+    borderColor: Colors.DEFAULT_RED,
+    borderWidth: 1,
+    paddingHorizontal: 16,
+    fontSize: 15,
+    fontWeight: '500',
+    color: Colors.DARK_ONE,
+  },
+
+  btn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: Colors.DEFAULT_RED,
+    margin: 5
+  },
+  btnText: {
+    fontSize: 18,
+    lineHeight: 26,
+    fontWeight: '600',
+    color: '#fff',
+  },
+
   image: {
     width: Dimensions.get("window").width,
     height: 250,
   },
   name: {
 
-    color: "White",
+    color: Colors.DEFAULT_WHITE,
     fontWeight: "bold",
     alignItems: "center",
     justifyContent: "center",
@@ -231,7 +338,7 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     fontWeight: "700",
     fontFamily: FontFamily.interBold,
-    color: Color.colorWhite,
+    color: Colors.DEFAULT_WHITE,
     textAlign: "center",
     display: "flex",
     width: 87,

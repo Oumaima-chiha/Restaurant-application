@@ -2,7 +2,7 @@ import React from 'react'
 import { StyleSheet} from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
-import { Homescreen , ReservationListScreen, MessagesScreen, LoginScreen, RestaurantDetails} from '../screens'
+import { Homescreen , ReservationListScreen, MessagesScreen,LoginScreen} from '../screens'
 import { AntDesign  } from '@expo/vector-icons'
 import { Colors } from "../contants";
 import { BlurView } from '@react-native-community/blur'
@@ -40,7 +40,7 @@ screenOptions={{
             <AntDesign name="message1" size={24} color={focused?Colors.DEFAULT_RED : Colors.primaryLightGreyHex}/>
         )
     }}></Tab.Screen>
-    <Tab.Screen name="Login" component={LoginScreen}  options={{
+    <Tab.Screen   name={"LoginScreen"}   component={LoginScreen}  options={{
         
         tabBarIcon: ({focused, color, size}) => (
             <AntDesign name="login" size={24} color={focused?Colors.DEFAULT_RED : Colors.primaryLightGreyHex}/>
