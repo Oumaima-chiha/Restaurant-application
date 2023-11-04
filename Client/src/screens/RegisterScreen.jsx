@@ -8,6 +8,7 @@ const RegisterScreen = ({ navigation }) => {
   const [inputs, setInputs] = useState({ fullname: '', email: '', password: '' });
 
 
+
   const handleButtonPress = () => {
     navigation.navigate('LoginScreen');
   };
