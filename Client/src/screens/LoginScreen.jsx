@@ -27,11 +27,11 @@ export default function LoginScreen({ navigation }) {
   };
 
   const validator = () => {
-    
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(inputs.email)) {
-      
-     
+
+
       return false;
     }
     return true;
@@ -40,7 +40,7 @@ export default function LoginScreen({ navigation }) {
   const handleSubmit = async () => {
     if (validator()) {
       try {
-        const { data } = await axios.post('http://192.168.137.37:3000/api/customers/signin', inputs);
+        const { data } = await axios.post('http://192.168.1.104:3000/api/customers/signin', inputs);
         console.log('Customer logged in successfully', data);
 
         toast.show({
