@@ -1,4 +1,3 @@
-import React from "react";
 import {
   SafeAreaView,
   View,
@@ -14,13 +13,15 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Colors } from '../contants';
 import { FontSize, FontFamily, Color, Border, Padding } from "../../GlobalStyles";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
 import store from '../features/store'
 import { useDispatch } from 'react-redux';
 import axios from "axios";
+import ToastMessage from "../Component/ToastMessage";
+
 
 
 
@@ -35,6 +36,10 @@ export default function RestaurantDetails({ route }) {
   const [reservation, setReservation] = useState({ date: '', time: '', guest_number: null })
   const [mode, setMode] = useState('date')
   const [showDateTime, setShowDateTime] = useState(false)
+  const [showToast, setShowToast] = useState(false);
+  const [showToast2, setShowToast2] = useState(false);
+  const [spotsRemaining, setSpotsRemaining] = useState('')
+  const toastRef = useRef(null);
 
 
   const {
@@ -62,17 +67,53 @@ export default function RestaurantDetails({ route }) {
     try {
       const myReservation = await axios.post(`http://192.168.1.184:3000/api/reservations/${customer.id}/${id}`, reservation)
       console.log("Your reservation request was sent!", myReservation)
+      setSpotsRemaining(`Your reservation request was sent!`)
+      setShowToast2(true);
+      if (toastRef.current) {
+        toastRef.current.show();
+      }
+
+      setReservation({ date: '', time: '', guest_number: null })
       toggleForm()
     } catch (error) {
       console.log("Couldn't send reservation request :(", error)
-      if (error.response.status === 400) console.log(error.response.data + ' spots remaining')
+      if (error.response.status === 400) {
+        if (error.response.data > 1) {
+          setSpotsRemaining(`This date only has ${error.response.data} reservation spots remaining`)
+        }
+        else if (error.response.data === 1) {
+          setSpotsRemaining(`This date only has ${error.response.data} reservation spot remaining`)
+        }
+        else if (error.response.data === 0) {
+          setSpotsRemaining(`This date has no reservation spots remaning`)
+        }
+
+        setShowToast(true);
+        if (toastRef.current) {
+          toastRef.current.show();
+        }
+      }
+      if (error.response.status === 422) {
+        setSpotsRemaining('Reservation info missing')
+        setShowToast(true);
+        if (toastRef.current) {
+          toastRef.current.show();
+        }
+      }
+      if (error.response.status === 404) {
+        setSpotsRemaining('You need to be logged in')
+        setShowToast(true);
+        if (toastRef.current) {
+          toastRef.current.show();
+        }
+      }
     }
 
   }
 
 
   const handleDateChange = (event, selectedDate) => {
-    let currentDate = selectedDate || new Date()
+    let currentDate = selectedDate || ''
 
     if (mode === 'date') {
 
@@ -114,6 +155,14 @@ export default function RestaurantDetails({ route }) {
 
   return (
     <SafeAreaView>
+      {showToast2 && (
+        <ToastMessage
+          ref={toastRef}
+          type="success"
+          text={spotsRemaining}
+          timeout={3000}
+        />
+      )}
       <View style={styles.header}>
         <View
           style={{
@@ -145,9 +194,21 @@ export default function RestaurantDetails({ route }) {
           >{`Opening Hours: ${opening_time} - ${closing_time}`}</Text>
           <Button title="Go Back" onPress={() => navigation.goBack()} />
           <Button title="Make A reservation " onPress={toggleForm} />
+
           {showForm && <Modal transparent={true} visible={true} >
 
+
             <TouchableOpacity style={{ backgroundColor: '#000000aa', flex: 1 }} onPress={toggleForm}>
+              {showToast && (
+                <ToastMessage
+                  ref={toastRef}
+                  type="danger"
+                  text={spotsRemaining}
+                  timeout={3000}
+                />
+              )}
+
+
 
               <View style={{ backgroundColor: Colors.DARK_ONE, margin: 20, padding: 40, borderRadius: 10, top: 250, height: 350, justifyContent: "space-between" }}
               >

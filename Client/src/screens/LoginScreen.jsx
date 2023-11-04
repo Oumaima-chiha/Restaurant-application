@@ -1,7 +1,6 @@
 import { Colors } from "../contants";
 import axios from "axios";
 import { Button } from "react-native";
-import React, { useState } from "react";
 import { useDispatch } from 'react-redux';
 import { setId, setFullname, setEmail } from '../../src/features/customerSlice';
 import React, { useState, useRef } from "react";
@@ -62,6 +61,8 @@ export default function LoginScreen({ navigation }) {
           toastRef.current.show();
         }
 
+        navigation.navigate('Home')
+
       } catch (error) {
         setShowToast(true);
         if (toastRef.current) {
@@ -73,6 +74,7 @@ export default function LoginScreen({ navigation }) {
   };
 
   return (
+
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.DEFAULT_BLACK }}>
       {showToast && (
         <ToastMessage
@@ -82,6 +84,7 @@ export default function LoginScreen({ navigation }) {
           timeout={3000}
         />
       )}
+
       {showToast1 && (
         <ToastMessage
           ref={toastRef}
@@ -91,10 +94,12 @@ export default function LoginScreen({ navigation }) {
         />
       )}
       <View style={styles.container}>
+
         <View style={styles.header}>
           <Text style={styles.title}>
             Sign in to <Text style={{ color: Colors.DEFAULT_RED }}>MyApp</Text>
           </Text>
+
           <Text style={styles.subtitle}>
             Login so you can make a reservation.
           </Text>
@@ -141,14 +146,9 @@ export default function LoginScreen({ navigation }) {
           </TouchableOpacity>
         </View>
       </View>
-<<<<<<< HEAD
-    </SafeAreaView >
-  );
-=======
 
     </SafeAreaView>
- );
->>>>>>> 3c29413bb69af0d3f9cfa8885d482752193d2365
+  );
 }
 
 const styles = StyleSheet.create({
