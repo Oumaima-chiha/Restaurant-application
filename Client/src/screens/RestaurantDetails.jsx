@@ -97,6 +97,41 @@ export default function RestaurantDetails({ route }) {
           <Image source={{ uri: main_image }} style={styles.image} />
         </View>
 
+<<<<<<< HEAD
+            <View style={{ backgroundColor: "#ffffff", margin: 50, padding: 40, borderRadius: 10, top: 250, height: 250 }}
+            >
+
+              <Text style={{ fontSize: 25 }}>Date</Text>
+              <DateTimePicker
+                mode="date"
+                value={new Date()}
+                placeholder="select date"
+
+                onChange={handleChange}
+              />
+              <Text style={{ fontSize: 25 }}>Time</Text>
+              <DateTimePicker
+                value={new Date()}
+                mode="time"
+                placeholder="select time"
+                onChange={handleChange}
+              />
+              <Text style={{ fontSize: 25 }}>Guests</Text>
+              <TextInput
+                name="guest_number"
+                keyboardType="number"
+                onChange={handleChange}
+              />
+
+
+            </View>
+
+          </TouchableOpacity>
+
+
+        </Modal>}
+=======
+>>>>>>> c59cdc5bd703085c868830da7358b13f9e6ff5f2
 
         <View style={styles.iconContainer}>
           <Text style={styles.name}>{name}</Text>
