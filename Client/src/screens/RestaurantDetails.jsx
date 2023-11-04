@@ -12,25 +12,33 @@ import {
   Modal,
   Pressable,
 } from "react-native";
-import { Display } from "../utils";
 import { useNavigation } from "@react-navigation/native";
 import DateTimePicker from '@react-native-community/datetimepicker';
-import DropDownPicker from "react-native-dropdown-picker";
 import { useState } from "react";
 import { Colors } from '../contants';
 import { FontSize, FontFamily, Color, Border, Padding } from "../../GlobalStyles";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
+import store from '../features/store'
+import { useDispatch } from 'react-redux';
+import axios from "axios";
+
+
 
 
 export default function RestaurantDetails({ route }) {
 
+
+  const dispatch = useDispatch();
+  const customer = store.getState().customer
+
   const [showForm, setShowForm] = useState(false)
-  const [reservation, setReservation] = useState({ date: new Date(Date.now()), time: '', guest_number: 0 })
+  const [reservation, setReservation] = useState({ date: '', time: '', guest_number: null })
   const [mode, setMode] = useState('date')
   const [showDateTime, setShowDateTime] = useState(false)
 
 
   const {
+    id,
     name,
     main_image,
     rating,
@@ -49,17 +57,37 @@ export default function RestaurantDetails({ route }) {
   }
 
 
+  const makeReservation = async () => {
+
+    try {
+      const myReservation = await axios.post(`http://192.168.1.184:3000/api/reservations/${customer.id}/${id}`, reservation)
+      console.log("Your reservation request was sent!", myReservation)
+      toggleForm()
+    } catch (error) {
+      console.log("Couldn't send reservation request :(", error)
+      if (error.response.status === 400) console.log(error.response.data + ' spots remaining')
+    }
+
+  }
+
+
   const handleDateChange = (event, selectedDate) => {
-    const currentDate = selectedDate || new Date()
-    setReservation((inputs) => ({ ...inputs, [mode]: currentDate }))
+    let currentDate = selectedDate || new Date()
+
+    if (mode === 'date') {
+
+      currentDate = currentDate.toISOString().slice(0, 10)
+    }
+
 
     if (event.type === 'set') {
-
-      console.log('Selected date:', new Date(currentDate));
+      console.log('Selected date:', (currentDate));
+      setReservation((inputs) => ({ ...inputs, [mode]: currentDate }))
       hideDateTime()
 
     }
-    hideDateTime()
+
+    else hideDateTime()
 
   }
 
@@ -97,41 +125,6 @@ export default function RestaurantDetails({ route }) {
           <Image source={{ uri: main_image }} style={styles.image} />
         </View>
 
-<<<<<<< HEAD
-            <View style={{ backgroundColor: "#ffffff", margin: 50, padding: 40, borderRadius: 10, top: 250, height: 250 }}
-            >
-
-              <Text style={{ fontSize: 25 }}>Date</Text>
-              <DateTimePicker
-                mode="date"
-                value={new Date()}
-                placeholder="select date"
-
-                onChange={handleChange}
-              />
-              <Text style={{ fontSize: 25 }}>Time</Text>
-              <DateTimePicker
-                value={new Date()}
-                mode="time"
-                placeholder="select time"
-                onChange={handleChange}
-              />
-              <Text style={{ fontSize: 25 }}>Guests</Text>
-              <TextInput
-                name="guest_number"
-                keyboardType="number"
-                onChange={handleChange}
-              />
-
-
-            </View>
-
-          </TouchableOpacity>
-
-
-        </Modal>}
-=======
->>>>>>> c59cdc5bd703085c868830da7358b13f9e6ff5f2
 
         <View style={styles.iconContainer}>
           <Text style={styles.name}>{name}</Text>
@@ -165,25 +158,25 @@ export default function RestaurantDetails({ route }) {
 
                   {showDateTime && <DateTimePicker
                     mode={mode}
-                    value={new Date()}
+                    value={new Date(Date.now())}
                     is24Hour={true}
                     confirmBtnText="Confirm"
                     display="default"
+                    minimumDate={new Date()}
                     timeZoneName={'Africa/Tunis'}
+                    timeZoneOffsetInMinutes={0}
                     onChange={handleDateChange}
                   />}
                   <Text style={{ fontSize: 25, color: "#ffffff" }}>Guests</Text>
                   <TextInput
                     keyboardType="numeric"
-                    onChangeText={(text) => handleChange('guest_number', text)}
+                    onChangeText={(text) => handleChange('guest_number', +text)}
                     style={styles.inputControlGuest}
 
                   />
                 </KeyboardAwareScrollView>
 
-                <Pressable style={styles.btn} onPress={() => {
-                  console.log(reservation.date.toISOString().slice(0, 10), new Date(reservation.time), reservation.guest_number)
-                }} ><Text style={styles.btnText}>Submit</Text></Pressable>
+                <Pressable style={styles.btn} onPress={makeReservation} ><Text style={styles.btnText}>Submit</Text></Pressable>
 
 
               </View>

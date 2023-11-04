@@ -2,7 +2,9 @@ import { Colors } from "../contants";
 import axios from "axios";
 import { Button } from "react-native";
 import React, { useState } from "react";
-import { useToast } from 'native-base';
+import { useDispatch } from 'react-redux';
+import { setId, setFullname, setEmail } from '../../src/features/customerSlice';
+import store from '../features/store'
 import {
   StyleSheet,
   SafeAreaView,
@@ -15,7 +17,11 @@ import {
 
 export default function LoginScreen({ navigation }) {
 
-  const toast = useToast();
+  const dispatch = useDispatch();
+
+
+
+
   const [inputs, setInputs] = useState({ email: '', password: '' });
 
   const handleButtonPress = () => {
@@ -40,39 +46,20 @@ export default function LoginScreen({ navigation }) {
   const handleSubmit = async () => {
     if (validator()) {
       try {
-<<<<<<< HEAD
         const { data } = await axios.post('http://192.168.1.184:3000/api/customers/signin', inputs);
-        console.log('Customer logged successfully', data);
-        Toast.show({
-          type: 'success',
-          text1: 'Successfully Logged In',
-=======
-        const { data } = await axios.post('http://192.168.1.104:3000/api/customers/signin', inputs);
-        console.log('Customer logged in successfully', data);
+        dispatch(setId(data.customer.id));
+        dispatch(setFullname(data.customer.fullname));
+        dispatch(setEmail(data.customer.email));
 
-        toast.show({
-          // type: 'success',
-          // text1: 'Successfully Logged In',
-          description: "Hello world",
-          placement: "top"
->>>>>>> c59cdc5bd703085c868830da7358b13f9e6ff5f2
-        });
+
+        console.log('Customer logged successfully');
+
         navigation.navigate('Home');
       } catch (error) {
         if (error.response && error.response.status === 410 && error.response.data.error === "Email doesn't exist") {
-          toast.show({
-            // type: 'error',
-            // text1: 'Please provide a correct email',
-            description: "Hello world",
-            placement: "top"
-          });
+
         } else if (error.response && error.response.status === 411 && error.response.data.error === 'invalid password') {
-          toast.show({
-            // type: 'error',
-            // text1: 'Please provide a correct password',
-            description: "Hello world",
-            placement: "top"
-          });
+
         } else {
           console.log(error);
         }
@@ -134,12 +121,7 @@ export default function LoginScreen({ navigation }) {
           </TouchableOpacity>
         </View>
       </View>
-<<<<<<< HEAD
-
-    </ScrollView>
-=======
     </SafeAreaView>
->>>>>>> c59cdc5bd703085c868830da7358b13f9e6ff5f2
   );
 }
 

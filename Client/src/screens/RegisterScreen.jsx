@@ -1,7 +1,6 @@
 import { Colors } from '../contants';
 import React, { useState } from "react";
 import { Text, StyleSheet, View, TextInput, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
-import Toast from 'react-native-toast-message';
 import axios from "axios";
 
 const RegisterScreen = ({ navigation }) => {
@@ -25,17 +24,11 @@ const RegisterScreen = ({ navigation }) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
     if (!emailRegex.test(inputs.email)) {
-      Toast.show({
-        type: 'error',
-        text1: 'Invalid email format',
-      });
+
       return false;
     }
     if (!passwordRegex.test(inputs.password)) {
-      Toast.show({
-        type: 'error',
-        text1: 'Password must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number, and be at least 8 characters long.',
-      });
+
       return false;
     }
     return true;
@@ -44,23 +37,13 @@ const RegisterScreen = ({ navigation }) => {
   const handleSubmit = async () => {
     if (validator()) {
       try {
-<<<<<<< HEAD
         const { data } = await axios.post('http://192.168.1.184:3000/api/customers/', inputs);
-=======
-        const { data } = await axios.post('http://192.168.1.104:3000/api/customers/', inputs);
->>>>>>> c59cdc5bd703085c868830da7358b13f9e6ff5f2
         console.log('User added successfully', data);
-        Toast.show({
-          type: 'success',
-          text1: 'Successfully Signed Up',
-        });
+
         navigation.navigate('LoginScreen');
       } catch (error) {
         if (error.response && error.response.status === 400 && error.response.data.error === 'Email already exists') {
-          Toast.show({
-            type: 'error',
-            text1: 'Email already exists. Please use a different email address.',
-          });
+
         } else {
           console.log(error);
         }
