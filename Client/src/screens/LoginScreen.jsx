@@ -1,22 +1,22 @@
 import { Colors } from "../contants";
 import axios from "axios";
-import { Button } from "react-native";
-import React, { useState } from "react";
-import { useToast } from 'native-base';
+import React, { useState, useRef } from "react";
 import {
   StyleSheet,
   SafeAreaView,
   View,
-  Image,
   Text,
   TouchableOpacity,
   TextInput,
 } from "react-native";
+import ToastMessage from "../Component/ToastMessage";
 
 export default function LoginScreen({ navigation }) {
 
-  const toast = useToast();
   const [inputs, setInputs] = useState({ email: '', password: '' });
+  const [showToast, setShowToast] = useState(false);
+  const [showToast1, setShowToast1] = useState(false);
+  const toastRef = useRef(null);
 
   const handleButtonPress = () => {
     navigation.navigate('RegisterScreen');
@@ -31,7 +31,6 @@ export default function LoginScreen({ navigation }) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(inputs.email)) {
 
-
       return false;
     }
     return true;
@@ -40,55 +39,50 @@ export default function LoginScreen({ navigation }) {
   const handleSubmit = async () => {
     if (validator()) {
       try {
-<<<<<<< HEAD
-        const { data } = await axios.post('http://192.168.1.184:3000/api/customers/signin', inputs);
-        console.log('Customer logged successfully', data);
-        Toast.show({
-          type: 'success',
-          text1: 'Successfully Logged In',
-=======
-        const { data } = await axios.post('http://192.168.1.104:3000/api/customers/signin', inputs);
+
+        const { data } = await axios.post('http://192.168.1.183:3000/api/customers/signin', inputs);
         console.log('Customer logged in successfully', data);
 
-        toast.show({
-          // type: 'success',
-          // text1: 'Successfully Logged In',
-          description: "Hello world",
-          placement: "top"
->>>>>>> c59cdc5bd703085c868830da7358b13f9e6ff5f2
-        });
-        navigation.navigate('Home');
+        setShowToast1(true);
+        if (toastRef.current) {
+          toastRef.current.show();
+        }      
+
       } catch (error) {
-        if (error.response && error.response.status === 410 && error.response.data.error === "Email doesn't exist") {
-          toast.show({
-            // type: 'error',
-            // text1: 'Please provide a correct email',
-            description: "Hello world",
-            placement: "top"
-          });
-        } else if (error.response && error.response.status === 411 && error.response.data.error === 'invalid password') {
-          toast.show({
-            // type: 'error',
-            // text1: 'Please provide a correct password',
-            description: "Hello world",
-            placement: "top"
-          });
-        } else {
-          console.log(error);
+        setShowToast(true);
+        if (toastRef.current) {
+          toastRef.current.show();
         }
+        console.log(error);
       }
     }
   };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.DEFAULT_BLACK }}>
+               {showToast && (
+              <ToastMessage
+                ref={toastRef}
+                type="danger"
+                text="Wrong information"
+                timeout={3000}
+              />
+            )}
+               {showToast1 && (
+              <ToastMessage
+                ref={toastRef}
+                type="success"
+                text="logged in successfully"
+                timeout={3000}
+              />
+            )}
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.title}>
             Sign in to <Text style={{ color: Colors.DEFAULT_RED }}>MyApp</Text>
           </Text>
           <Text style={styles.subtitle}>
-            Get access to your portfolio and more
+            Login so you can make a reservation.
           </Text>
         </View>
         <View style={styles.form}>
@@ -129,18 +123,13 @@ export default function LoginScreen({ navigation }) {
             <Text style={styles.formFooter}>
               Don't have an account?{' '}
               <Text style={{ textDecorationLine: 'underline', color: Colors.DEFAULT_RED }}>Sign up</Text>
-
             </Text>
           </TouchableOpacity>
         </View>
       </View>
-<<<<<<< HEAD
 
-    </ScrollView>
-=======
     </SafeAreaView>
->>>>>>> c59cdc5bd703085c868830da7358b13f9e6ff5f2
-  );
+ );
 }
 
 const styles = StyleSheet.create({
@@ -217,4 +206,5 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#fff',
   },
+
 });
