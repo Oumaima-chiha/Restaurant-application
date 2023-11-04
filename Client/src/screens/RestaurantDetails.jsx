@@ -79,14 +79,13 @@ export default function RestaurantDetails({ route }) {
                 mode="date"
                 value={new Date()}
                 placeholder="select date"
-                format="DD/MM/YYYY"
-                confirmBtnText="Confirm"
-                cancelBtnText="Cancel"
+
                 onChange={handleChange}
               />
               <Text style={{ fontSize: 25 }}>Time</Text>
               <DateTimePicker
                 value={new Date()}
+                mode="time"
                 placeholder="select time"
                 onChange={handleChange}
               />

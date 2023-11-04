@@ -38,7 +38,7 @@ const LoginScreen = ({ navigation }) => {
   const handleSubmit = async () => {
     if (validator()) {
       try {
-        const { data } = await axios.post('http://172.16.0.59:3000/api/customers/signin', inputs);
+        const { data } = await axios.post('http://192.168.1.184:3000/api/customers/signin', inputs);
         console.log('Customer logged successfully', data);
         Toast.show({
           type: 'success',
@@ -101,7 +101,7 @@ const LoginScreen = ({ navigation }) => {
           <Text style={styles.register}>Register</Text>
         </TouchableOpacity>
       </View>
-  
+
     </ScrollView>
   );
 };
