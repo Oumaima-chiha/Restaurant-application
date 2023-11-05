@@ -11,7 +11,13 @@ import { Colors } from "../contants";
 import { AntDesign } from "@expo/vector-icons";
 import RestaurantCard from "../Component/RestaurantCard";
 
+
+
 export default function HomeScreen({ navigation }) {
+
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+
+
   const [restaurant, setRestaurant] = useState([]);
 
 
@@ -22,7 +28,7 @@ export default function HomeScreen({ navigation }) {
 
   const fetchData = async () => {
     try {
-      const response = await fetch("http://192.168.1.184:3000/api/restaurants");
+      const response = await fetch(`http://${apiUrl}:3000/api/restaurants`);
       if (response.ok) {
         const data = await response.json();
         setRestaurant(data);
@@ -35,7 +41,9 @@ export default function HomeScreen({ navigation }) {
   };
 
   React.useEffect(() => {
-    fetchData();
+
+    fetchData()
+
   }, []);
   return (
     <ScrollView

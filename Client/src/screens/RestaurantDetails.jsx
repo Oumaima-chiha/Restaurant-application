@@ -6,7 +6,6 @@ import {
   StyleSheet,
   Button,
   TextInput,
-  TouchableOpacity,
   Dimensions,
   Modal,
   Pressable,
@@ -18,7 +17,6 @@ import { Colors } from '../contants';
 import { FontSize, FontFamily, Color, Border, Padding } from "../../GlobalStyles";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
 import store from '../features/store'
-import { useDispatch } from 'react-redux';
 import axios from "axios";
 import ToastMessage from "../Component/ToastMessage";
 
@@ -27,10 +25,11 @@ import ToastMessage from "../Component/ToastMessage";
 
 
 export default function RestaurantDetails({ route }) {
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
 
-  const dispatch = useDispatch();
   const customer = store.getState().customer
+  const getUpcoming = store.getState().customer.getUpcoming
 
   const [showForm, setShowForm] = useState(false)
   const [reservation, setReservation] = useState({ date: '', time: '', guest_number: null })
@@ -65,7 +64,7 @@ export default function RestaurantDetails({ route }) {
   const makeReservation = async () => {
 
     try {
-      const myReservation = await axios.post(`http://192.168.1.184:3000/api/reservations/${customer.id}/${id}`, reservation)
+      const myReservation = await axios.post(`http://${apiUrl}:3000/api/reservations/${customer.id}/${id}`, reservation)
       console.log("Your reservation request was sent!", myReservation)
       setSpotsRemaining(`Your reservation request was sent!`)
       setShowToast2(true);
@@ -74,6 +73,7 @@ export default function RestaurantDetails({ route }) {
       }
 
       setReservation({ date: '', time: '', guest_number: null })
+      getUpcoming()
       toggleForm()
     } catch (error) {
       console.log("Couldn't send reservation request :(", error)
@@ -198,7 +198,7 @@ export default function RestaurantDetails({ route }) {
           {showForm && <Modal transparent={true} visible={true} >
 
 
-            <TouchableOpacity style={{ backgroundColor: '#000000aa', flex: 1 }} onPress={toggleForm}>
+            <Pressable style={{ backgroundColor: '#000000aa', flex: 1 }} >
               {showToast && (
                 <ToastMessage
                   ref={toastRef}
@@ -241,7 +241,7 @@ export default function RestaurantDetails({ route }) {
 
 
               </View>
-            </TouchableOpacity>
+            </Pressable>
 
 
 

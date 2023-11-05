@@ -1,34 +1,27 @@
-import { StyleSheet, Text, View, ScrollView } from 'react-native'
-import { LinearGradient } from "expo-linear-gradient";
-import { Colors, Images } from "../contants";
+import { StyleSheet, View, ScrollView } from 'react-native'
+import { Colors } from "../contants";
 import { Color, FontSize, Border } from "../../GlobalStyles";
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import axios from 'axios';
 import store from '../features/store'
 import { Display } from "../utils";
-import moment from 'moment'
-import { Dimensions } from 'react-native';
+import HistoryList from './HistoryList.jsx'
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { setGetExpired } from '../../src/features/customerSlice';
 
 
-import { useState, useEffect } from 'react';
 
-
-
-import React from 'react'
-
-
-const { height, width } = Dimensions.get('window');
-
-// Use the setHeight function to calculate the margin top
-const marginTopPercentage = 2; // You can adjust this value as needed
-const marginTop = Display.setHeight(marginTopPercentage);
-const Tab = createMaterialTopTabNavigator();
 
 const History = () => {
 
-    const [expiredReservations, setExpiredReservations] = useState([])
-    const [scrollViewHeight, setScrollViewHeight] = useState(0);
+    const dispatch = useDispatch();
 
+
+    const [expiredReservations, setExpiredReservations] = useState([])
+    const [restaurants, setRestaurants] = useState([])
+
+
+    const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
 
     const customer = store.getState().customer
@@ -36,51 +29,43 @@ const History = () => {
     const fetchHistory = async () => {
 
         try {
-            const { data } = await axios.get(`http://192.168.1.184:3000/api/reservations/expired/${customer.id}`)
+            const { data } = await axios.get(`http://${apiUrl}:3000/api/reservations/expired/${customer.id}`)
             setExpiredReservations(data)
         } catch (error) {
             console.log(error)
         }
     }
-    const calculateScrollViewHeight = () => {
-        const itemHeight = 10
-        const totalHeight = expiredReservations.length * itemHeight
-        setScrollViewHeight(totalHeight);
-    };
+
+    dispatch(setGetExpired(fetchHistory));
+
+
+    const findRestaurantName = async () => {
+        try {
+
+            const { data } = await axios.get(`http://${apiUrl}:3000/api/restaurants`)
+            setRestaurants(data)
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
 
 
     useEffect(() => {
-        calculateScrollViewHeight()
 
         fetchHistory()
-
+        findRestaurantName()
     }, [])
 
     return (
         <View style={styles.container}>
-            <ScrollView style={{ height: scrollViewHeight }}
-                contentContainerStyle={{ paddingBottom: 16 }} >
+            <ScrollView style={styles.constainer2}
+                contentContainerStyle={styles.scrollViewContent}
+            >
                 {expiredReservations.map((reserv) => (
-                    <View key={reserv.id} style={{
-                        borderRadius: 10,
-                        margin: 25,
-                        padding: 25,
-                        height: Display.setHeight(10),
-                        width: Display.setWidth(90),
-                        marginTop,
-                        marginBottom: 9
-                    }}>
-                        <LinearGradient
-                            style={[styles.rectangleLineargradient, styles.groupIconLayout]}
-                            locations={[0, 1]}
-                            colors={["#000", "rgba(0, 0, 0, 0)"]}
-                        />
-                        <View style={[styles.rectangleView, styles.iphone131412ChildLayout1]} />
-                        <Text style={[styles.pending, styles.rosemarysTypo]}>{reserv.status}</Text>
-                        {console.log(reserv.id)}
-                        <Text style={[styles.rosemarys, styles.rosemarysLayout]}>sfafasf</Text>
-                        <Text style={[styles.text, styles.textPosition]}>{moment(reserv.date).calendar()}</Text>
-                        <Text style={[styles.pm, styles.rosemarysTypo]}>{moment(reserv.time).format('LT') + ' z ' + reserv.id}</Text>
+                    <View key={reserv.id} style={styles.card}>
+                        <HistoryList reservation={reserv} restaurants={restaurants}></HistoryList>
                     </View>
                 ))}
 
@@ -101,6 +86,23 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.primaryBlackHex,
 
 
+    },
+
+    constainer2: {
+        flex: 1,
+        backgroundColor: Colors.DARK_ONE,
+        marginTop: -150,
+
+    },
+    scrollViewContent: {
+        paddingVertical: 100,
+    },
+    card: {
+        borderRadius: 10,
+        margin: 5,
+        padding: 5,
+        width: Display.setWidth(90),
+        marginBottom: 100,
     },
     historyTypo: {
         justifyContent: "center",

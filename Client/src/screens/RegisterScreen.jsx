@@ -13,6 +13,8 @@ const RegisterScreen = ({ navigation }) => {
   const [showToast3, setShowToast3] = useState(false);
   const toastRef = useRef(null);
 
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+
 
   const handleButtonPress = () => {
     navigation.navigate('LoginScreen');
@@ -50,7 +52,7 @@ const RegisterScreen = ({ navigation }) => {
     if (validator()) {
       try {
 
-        const { data } = await axios.post('http://192.168.1.184:3000/api/customers/', inputs);
+        const { data } = await axios.post(`http://${apiUrl}:3000/api/customers/`, inputs);
 
         console.log('User added successfully', data);
         setShowToast2(true);

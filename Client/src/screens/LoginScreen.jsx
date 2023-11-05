@@ -1,6 +1,5 @@
 import { Colors } from "../contants";
 import axios from "axios";
-import { Button } from "react-native";
 import { useDispatch } from 'react-redux';
 import { setId, setFullname, setEmail } from '../../src/features/customerSlice';
 import React, { useState, useRef } from "react";
@@ -17,6 +16,7 @@ import ToastMessage from "../Component/ToastMessage";
 export default function LoginScreen({ navigation }) {
 
   const dispatch = useDispatch();
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
 
 
@@ -48,7 +48,7 @@ export default function LoginScreen({ navigation }) {
     if (validator()) {
       try {
 
-        const { data } = await axios.post('http://192.168.1.184:3000/api/customers/signin', inputs);
+        const { data } = await axios.post(`http://${apiUrl}:3000/api/customers/signin`, inputs);
         dispatch(setId(data.customer.id));
         dispatch(setFullname(data.customer.fullname));
         dispatch(setEmail(data.customer.email));

@@ -1,112 +1,58 @@
-import { StyleSheet, View, ScrollView } from 'react-native'
-import { Colors } from "../contants";
+import { StyleSheet, Text, View, ScrollView } from 'react-native'
+import { LinearGradient } from "expo-linear-gradient";
+import { Colors, Images } from "../contants";
 import { Color, FontSize, Border } from "../../GlobalStyles";
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import axios from 'axios';
 import store from '../features/store'
 import { Display } from "../utils";
+import moment from 'moment'
+import { Dimensions } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import UpcomingList from './UpcomingList.jsx'
-import { useDispatch } from 'react-redux';
-import { setGetUpcoming } from '../../src/features/customerSlice.js';
 
 
 
-
-const Upcoming = () => {
-    const dispatch = useDispatch();
-
-    const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-
-    const [upcomingReservations, setUpcomoingReservations] = useState([])
-    const [restaurants, setRestaurants] = useState([])
+const HistoryList = ({ reservation, restaurants }) => {
 
 
-    const customer = store.getState().customer
+    const restaurantName = restaurants.slice().find((restaurant) => {
+        return restaurant.id === reservation.restaurantId
+    })
 
-    const fetchUpcoming = async () => {
-
-        try {
-            const { data } = await axios.get(`http://${apiUrl}:3000/api/reservations/upcoming/${customer.id}`)
-            setUpcomoingReservations(data)
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    dispatch(setGetUpcoming(fetchUpcoming));
-
-
-    const findRestaurantName = async () => {
-        try {
-
-            const { data } = await axios.get(`http://${apiUrl}:3000/api/restaurants`)
-            setRestaurants(data)
-
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-
-
-
-
-
-    useEffect(() => {
-
-        fetchUpcoming()
-        findRestaurantName()
-
-    }, [])
-
-    const sortedReservations = upcomingReservations.slice().sort((a, b) => new Date(a.date) - new Date(b.date))
 
     return (
-        <View style={styles.container}>
-            <ScrollView
-                style={styles.constainer2}
-                contentContainerStyle={styles.scrollViewContent}
-
-            >
-                {sortedReservations.map((reservation) => (
-                    <View key={reservation.id} style={styles.card}
-                    >
-                        <UpcomingList reservation={reservation} restaurants={restaurants}></UpcomingList>
-                    </View>
-                ))}
 
 
-            </ScrollView>
-        </View>
+        <>
+
+            <LinearGradient
+                style={[styles.rectangleLineargradient, styles.groupIconLayout]}
+                locations={[0, 1]}
+                colors={["#000", "rgba(0, 0, 0, 0)"]}
+            />
+            <Text style={[styles.pending, styles.rosemarysTypo]}>{reservation.status}</Text>
+            <Text style={[styles.rosemarys, styles.rosemarysLayout]}>{restaurantName.name}</Text>
+            <Text style={[styles.text, styles.textPosition]}>{moment(reservation.date).calendar()}</Text>
+            <Text style={[styles.pm, styles.rosemarysTypo]}>{moment(reservation.time).utcOffset('-000').format('LT')}</Text>
+
+
+        </>
+
 
     )
 }
 
-export default Upcoming
+export default HistoryList
+
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: Colors.primaryBlackHex,
-
-
-    },
-    constainer2: {
-        flex: 1,
-        backgroundColor: Colors.DARK_ONE,
-        marginTop: -150,
-
-    },
-    scrollViewContent: {
-        paddingVertical: 100,
-    },
     card: {
         borderRadius: 10,
         margin: 5,
         padding: 2,
         width: Display.setWidth(90),
-        marginBottom: 100,
-
+        marginBottom: 100, // Adjust as needed
+        // Other card styles
     },
 
 
