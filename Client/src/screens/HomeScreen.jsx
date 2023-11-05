@@ -10,24 +10,25 @@ import {
 import { Colors } from "../contants";
 import { AntDesign } from "@expo/vector-icons";
 import RestaurantCard from "../Component/RestaurantCard";
+import { useEffect } from "react";
 
-export default function HomeScreen({ navigation }) {
+
+
+
+export default function HomeScreen({ navigation, route }) {
+
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+
+
   const [restaurant, setRestaurant] = useState([]);
-
-
-  const handleButtonPress = (restaurant) => {
-    navigation.navigate("RestaurantDetails", { restaurant });
-    console.log(restaurant)
-  };
 
   const fetchData = async () => {
     try {
-
-      const response = await fetch("http://192.168.1.184:3000/api/restaurants");
-
+      const response = await fetch(`http://${apiUrl}:3000/api/restaurants`);
       if (response.ok) {
         const data = await response.json();
         setRestaurant(data);
+
       } else {
         console.error("Failed to fetch data");
       }
@@ -36,9 +37,28 @@ export default function HomeScreen({ navigation }) {
     }
   };
 
-  React.useEffect(() => {
-    fetchData();
-  }, []);
+  useEffect(() => {
+
+    fetchData()
+
+    console.log('aaaa')
+
+
+
+  }, [])
+
+
+
+
+
+
+
+  const handleButtonPress = (restaurant) => {
+    navigation.navigate("RestaurantDetails", { restaurant });
+    console.log(restaurant)
+  };
+
+
   return (
     <ScrollView
       vertical

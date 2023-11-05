@@ -1,6 +1,6 @@
 import { Colors } from '../contants';
 import React, { useState, useRef } from "react";
-import { Text, StyleSheet, View, TextInput, ScrollView, TouchableOpacity,   SafeAreaView } from 'react-native';
+import { Text, StyleSheet, View, TextInput, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
 import Toast from 'react-native-toast-message';
 import axios from "axios";
 import ToastMessage from "../Component/ToastMessage";
@@ -12,6 +12,8 @@ const RegisterScreen = ({ navigation }) => {
   const [showToast2, setShowToast2] = useState(false);
   const [showToast3, setShowToast3] = useState(false);
   const toastRef = useRef(null);
+
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
 
   const handleButtonPress = () => {
@@ -29,7 +31,7 @@ const RegisterScreen = ({ navigation }) => {
   const validator = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
-    if (!emailRegex.test(inputs.email)) {      
+    if (!emailRegex.test(inputs.email)) {
       setShowToast(true);
       if (toastRef.current) {
         toastRef.current.show();
@@ -50,7 +52,7 @@ const RegisterScreen = ({ navigation }) => {
     if (validator()) {
       try {
 
-        const { data } = await axios.post('http://192.168.1.184:3000/api/customers/', inputs);
+        const { data } = await axios.post(`http://${apiUrl}:3000/api/customers/`, inputs);
 
         console.log('User added successfully', data);
         setShowToast2(true);
@@ -59,11 +61,11 @@ const RegisterScreen = ({ navigation }) => {
         }
         navigation.navigate('LoginScreen');
       } catch (error) {
-        if (error.response && error.response.status === 400 && error.response.data.error === 'Email already exists') {      
-        setShowToast3(true);
-        if (toastRef.current) {
-          toastRef.current.show();
-        }
+        if (error.response && error.response.status === 400 && error.response.data.error === 'Email already exists') {
+          setShowToast3(true);
+          if (toastRef.current) {
+            toastRef.current.show();
+          }
         } else {
           console.log(error);
         }
@@ -73,38 +75,38 @@ const RegisterScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.DEFAULT_BLACK }}>
-                     {showToast && (
-              <ToastMessage
-                ref={toastRef}
-                type="danger"
-                text="Invalid email format"
-                timeout={3000}
-              />
-            )}
-               {showToast1 && (
-              <ToastMessage
-                ref={toastRef}
-                type="danger"
-                text="Password must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number, and be at least 8 characters long."
-                timeout={3000}
-              />
-            )}
-                           {showToast2 && (
-              <ToastMessage
-                ref={toastRef}
-                type="success"
-                text="Successfully Signed Up"
-                timeout={3000}
-              />
-            )}
-               {showToast3 && (
-              <ToastMessage
-                ref={toastRef}
-                type="warning"
-                text="Email already exists. Please use a different email address."
-                timeout={3000}
-              />
-            )}
+      {showToast && (
+        <ToastMessage
+          ref={toastRef}
+          type="danger"
+          text="Invalid email format"
+          timeout={3000}
+        />
+      )}
+      {showToast1 && (
+        <ToastMessage
+          ref={toastRef}
+          type="danger"
+          text="Password must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number, and be at least 8 characters long."
+          timeout={3000}
+        />
+      )}
+      {showToast2 && (
+        <ToastMessage
+          ref={toastRef}
+          type="success"
+          text="Successfully Signed Up"
+          timeout={3000}
+        />
+      )}
+      {showToast3 && (
+        <ToastMessage
+          ref={toastRef}
+          type="warning"
+          text="Email already exists. Please use a different email address."
+          timeout={3000}
+        />
+      )}
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.title}>
