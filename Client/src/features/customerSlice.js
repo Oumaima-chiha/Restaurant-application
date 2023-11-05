@@ -4,8 +4,7 @@ const initialState = {
     id: "",
     fullname: "",
     email: "",
-    getUpcoming: null,
-    getExpired: null
+
 };
 
 
@@ -22,12 +21,8 @@ const customerSlice = createSlice({
         setEmail: (state, action) => {
             state.email = action.payload;
         },
-        setGetUpcoming: (state, action) => {
-            state.getUpcoming = action.payload;
-        },
-        setGetExpired: (state, action) => {
-            state.getExpired = action.payload;
-        },
+
+
 
     },
 });
@@ -38,8 +33,9 @@ export const {
     setEmail,
     getUpcoming,
     getExpired,
-    setGetUpcoming,
-    setGetExpired
+
 } = customerSlice.actions;
+
+
 
 export default customerSlice.reducer;

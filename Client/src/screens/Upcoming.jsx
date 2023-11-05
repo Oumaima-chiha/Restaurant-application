@@ -6,16 +6,14 @@ import store from '../features/store'
 import { Display } from "../utils";
 import React, { useState, useEffect } from 'react';
 import UpcomingList from './UpcomingList.jsx'
-import { useDispatch } from 'react-redux';
-import { setGetUpcoming } from '../../src/features/customerSlice.js';
 
 
 
 
-const Upcoming = () => {
-    const dispatch = useDispatch();
+const Upcoming = ({ route }) => {
 
     const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+
 
     const [upcomingReservations, setUpcomoingReservations] = useState([])
     const [restaurants, setRestaurants] = useState([])
@@ -33,7 +31,6 @@ const Upcoming = () => {
         }
     }
 
-    dispatch(setGetUpcoming(fetchUpcoming));
 
 
     const findRestaurantName = async () => {
@@ -56,6 +53,7 @@ const Upcoming = () => {
 
         fetchUpcoming()
         findRestaurantName()
+
 
     }, [])
 

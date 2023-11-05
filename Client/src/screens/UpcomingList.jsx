@@ -2,28 +2,13 @@ import { StyleSheet, Text, View, ScrollView } from 'react-native'
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors, Images } from "../contants";
 import { Color, FontSize, Border } from "../../GlobalStyles";
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import axios from 'axios';
-import store from '../features/store'
 import { Display } from "../utils";
 import moment from 'moment'
-import { Dimensions } from 'react-native';
-
-
-import { useState, useEffect } from 'react';
-
-
-
 import React from 'react'
 
-const { height, width } = Dimensions.get('window');
 
-// Use the setHeight function to calculate the margin top
-const marginTopPercentage = 2; // You can adjust this value as needed
-const marginTop = Display.setHeight(marginTopPercentage);
 
 const UpcomingList = ({ reservation, restaurants }) => {
-
 
 
 
@@ -45,7 +30,7 @@ const UpcomingList = ({ reservation, restaurants }) => {
                 colors={["#000", "rgba(0, 0, 0, 0)"]}
             />
             <Text style={[styles.pending, styles.rosemarysTypo]}>{reservation.status}</Text>
-            <Text style={[styles.rosemarys, styles.rosemarysLayout]}>{restaurantName.name}</Text>
+            <Text style={[styles.rosemarys, styles.rosemarysLayout]}>{restaurantName?.name}</Text>
             <Text style={[styles.text, styles.textPosition]}>{moment(reservation.date).calendar()}</Text>
             <Text style={[styles.pm, styles.rosemarysTypo]}>{moment(reservation.time).utcOffset('-000').format('LT')}</Text>
 

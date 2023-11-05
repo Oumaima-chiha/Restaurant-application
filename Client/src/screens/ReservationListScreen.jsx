@@ -2,16 +2,13 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { Upcoming, History } from '../screens'
 import { Display } from "../utils";
 import { StyleSheet, Text, View } from 'react-native'
-import { Dimensions } from 'react-native';
-import { Colors, Images } from "../contants";
+import store from '../features/store'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios'
 
 
 
-
-const { height, width } = Dimensions.get('window');
-
-// Use the setHeight function to calculate the margin top
-const marginTopPercentage = 4; // You can adjust this value as needed
+const marginTopPercentage = 4;
 const marginTop = Display.setHeight(marginTopPercentage);
 
 
@@ -20,6 +17,8 @@ const marginTop = Display.setHeight(marginTopPercentage);
 const Tab = createMaterialTopTabNavigator();
 
 function MyTabs() {
+
+
 
 
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Provider } from 'react-redux';
@@ -25,6 +25,10 @@ const Stack = createStackNavigator();
 
 
 const Navigators = () => {
+
+
+
+
   return (
     <Provider store={store} >
       <NavigationContainer>

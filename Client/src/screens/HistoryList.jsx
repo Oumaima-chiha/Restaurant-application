@@ -31,7 +31,7 @@ const HistoryList = ({ reservation, restaurants }) => {
                 colors={["#000", "rgba(0, 0, 0, 0)"]}
             />
             <Text style={[styles.pending, styles.rosemarysTypo]}>{reservation.status}</Text>
-            <Text style={[styles.rosemarys, styles.rosemarysLayout]}>{restaurantName.name}</Text>
+            <Text style={[styles.rosemarys, styles.rosemarysLayout]}>{restaurantName?.name}</Text>
             <Text style={[styles.text, styles.textPosition]}>{moment(reservation.date).calendar()}</Text>
             <Text style={[styles.pm, styles.rosemarysTypo]}>{moment(reservation.time).utcOffset('-000').format('LT')}</Text>
 

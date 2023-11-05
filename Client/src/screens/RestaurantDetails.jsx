@@ -29,7 +29,6 @@ export default function RestaurantDetails({ route }) {
 
 
   const customer = store.getState().customer
-  const getUpcoming = store.getState().customer.getUpcoming
 
   const [showForm, setShowForm] = useState(false)
   const [reservation, setReservation] = useState({ date: '', time: '', guest_number: null })
@@ -73,7 +72,6 @@ export default function RestaurantDetails({ route }) {
       }
 
       setReservation({ date: '', time: '', guest_number: null })
-      getUpcoming()
       toggleForm()
     } catch (error) {
       console.log("Couldn't send reservation request :(", error)
@@ -195,7 +193,7 @@ export default function RestaurantDetails({ route }) {
           <Button title="Go Back" onPress={() => navigation.goBack()} />
           <Button title="Make A reservation " onPress={toggleForm} />
 
-          {showForm && <Modal transparent={true} visible={true} >
+          {showForm && <Modal transparent={true} visible={true} onPress={toggleForm} >
 
 
             <Pressable style={{ backgroundColor: '#000000aa', flex: 1 }} >

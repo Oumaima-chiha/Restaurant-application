@@ -6,15 +6,13 @@ import store from '../features/store'
 import { Display } from "../utils";
 import HistoryList from './HistoryList.jsx'
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { setGetExpired } from '../../src/features/customerSlice';
+
 
 
 
 
 const History = () => {
 
-    const dispatch = useDispatch();
 
 
     const [expiredReservations, setExpiredReservations] = useState([])
@@ -36,7 +34,6 @@ const History = () => {
         }
     }
 
-    dispatch(setGetExpired(fetchHistory));
 
 
     const findRestaurantName = async () => {
