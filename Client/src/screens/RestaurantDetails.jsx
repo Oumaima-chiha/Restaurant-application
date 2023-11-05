@@ -22,6 +22,7 @@ export default function RestaurantDetails({ route }) {
     opening_time,
     closing_time,
     City,
+    category
   } = route.params.restaurant;
   console.log(route.params.restaurant);
   const navigation = useNavigation();
@@ -60,6 +61,9 @@ export default function RestaurantDetails({ route }) {
         <Text
             style={styles.openingHours}
           >{` ${moment(opening_time).format('LT')} - ${moment(closing_time).format('LT')}`}</Text>
+          <View style={styles.categoryContainer}>
+           <Text style={styles.category}>{category}</Text>
+           </View>
           <View   style={{
             flexDirection: "row",
             alignItems: "center",
@@ -86,19 +90,7 @@ export default function RestaurantDetails({ route }) {
 
         <View >
          
-          <Text style={styles.category}></Text>
          
-        
-          
-
-          
-   
-        
-      
-         
-     
-        
-     
         </View>
       </View>
      
@@ -109,7 +101,7 @@ const styles = StyleSheet.create({
 
   image: {
     width: Dimensions.get("window").width,
-    height: 390,
+    height: 480,
   },
   name: {
     
@@ -120,7 +112,17 @@ const styles = StyleSheet.create({
     color:"white",
   },
   category: {
-    color: "gray",
+    color: "black",
+    paddingVertical:6,
+    fontSize:14,    
+  },
+  categoryContainer: {
+    backgroundColor:'rgba(255, 255, 255, 0.7)',
+    width:80,
+    alignItems:'center',
+    justifyContent:'center',
+    borderRadius:8
+    
   },
   description: {
     color: "gray",

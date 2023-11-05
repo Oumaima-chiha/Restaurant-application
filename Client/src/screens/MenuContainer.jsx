@@ -1,9 +1,9 @@
 import React from "react";
-import { View, StyleSheet, FlatList, Image, Pressable } from "react-native";
+import { View, StyleSheet, FlatList, Image, Pressable ,Text} from "react-native";
 
 const MenuContainer = ({ route, navigation }) => {
   const data = route.params.menuImages;
-  const _renderItem = ({ item, index }) => {
+  const renderItem = ({ item, index }) => {
     return (
       <View style={styles.imageContainer} key={index}>
         <Image source={{ uri: item }} style={styles.menuImage} />
@@ -17,8 +17,8 @@ const MenuContainer = ({ route, navigation }) => {
       <View style={styles.innerContainer}>
         <FlatList
           data={data}
-          renderItem={_renderItem}
-       
+          renderItem={renderItem}
+        horizontal={true}
           showsHorizontalScrollIndicator={false}
         />
       </View>
