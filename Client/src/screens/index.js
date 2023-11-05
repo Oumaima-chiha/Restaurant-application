@@ -10,7 +10,8 @@ import RestaurantDetails from "./RestaurantDetails";
 import ForgetPasswordEmail from "./ForgetPasswordEmail";
 import VerificationCodeScreen from "./VerificationCodeScreen";
 import NewPasswordScreen from "./NewPasswordScreen.jsx";
-import RegisterScreen from "./RegisterScreen.jsx"
+import RegisterScreen from "./RegisterScreen.jsx";
+import MenuContainer from "./MenuContainer";
 
 export {
   Splashscreen,
@@ -25,5 +26,6 @@ export {
   ForgetPasswordEmail,
   VerificationCodeScreen,
   NewPasswordScreen,
-  RegisterScreen
+  RegisterScreen,
+  MenuContainer,
 };

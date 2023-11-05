@@ -1,15 +1,16 @@
-import React from "react";
+import React  from "react";
 import {
-  SafeAreaView,
   View,
   Text,
   Image,
   StyleSheet,
-  Button,
+ ScrollView,
+  TouchableOpacity
 } from "react-native";
-import { Display } from "../utils";
+import {  Images } from "../contants";
 import { useNavigation } from "@react-navigation/native";
 import { Dimensions } from "react-native";
+import moment from "moment" ;
 
 export default function RestaurantDetails({ route }) {
   const {
@@ -20,68 +21,103 @@ export default function RestaurantDetails({ route }) {
     menu_images,
     opening_time,
     closing_time,
+    City,
   } = route.params.restaurant;
   console.log(route.params.restaurant);
   const navigation = useNavigation();
 
   return (
-    <SafeAreaView>
-      <View style={styles.header}>
+    <View style={styles.ScreenContainer}>
+      <View>
+      <Image source={{ uri: main_image.trim() }} style={styles.image} />
+      <View style={styles.ratingContainer}>
+      <Text style={styles.ratingText}>{`Rating: ${rating}`}</Text>
+      </View>
+      </View>
+   
+    <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.ScrollViewFlex}>
         <View
           style={{
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
+            
           }}
         >
-          <Image source={{ uri: main_image }} style={styles.image} />
+    <Text style={styles.name}>{name}</Text>
+    <TouchableOpacity  style={styles.menuButton} onPress={() => navigation.navigate("MenuContainer",{
+          menuImages:menu_images
+        })} ><Text style={styles.menuText}>
+      Menu
+    </Text>
+      </TouchableOpacity>
+
+          
         </View>
-
-        <View style={styles.iconContainer}>
-          <Text style={styles.name}>{name}</Text>
-          <Text style={styles.category}></Text>
-          <Button title="Menu" onPress={() => navigation.navigate("")} >
-
-          <Text style={styles.InfoTitle}>{description}</Text> 
-         {menu_images.map((menuImage, index) => (
-            <Image
-              key={index}
-              source={{ uri: menuImage }}
-              style={styles.menuImage}
-            />
-          ))}
-          </Button>
-          <Text style={styles.rating}>{`Rating: ${rating}`}</Text>
-          <Text
+       
+        <Text
             style={styles.openingHours}
-          >{`Opening Hours: ${opening_time} - ${closing_time}`}</Text>
-          <Button title="Go Back" onPress={() => navigation.goBack()} />
-          <Button title="Make A reservation " onPress={() => navigation.navigate("ReservationListScreen")} />
+          >{` ${moment(opening_time).format('LT')} - ${moment(closing_time).format('LT')}`}</Text>
+          <View   style={{
+            flexDirection: "row",
+            alignItems: "center",
+            gap:5
+            
+          }}>
+            <Image source={Images.PINICON}  style={styles.icon}/>
+           <Text
+            style={styles.openingHours}
+          >{City}</Text>
+          
+          </View>
+        <Text style={styles.description}>{description}</Text> 
+        <View style={styles.reservationContainer}>
+        <TouchableOpacity style={styles.menuButton} onPress={() => navigation.navigate("ReservationListScreen")} >
+          <Text style={styles.menuText}>
+     Make a Reservation
+    </Text>
+          </TouchableOpacity>
+          </View>
+         
+        
+        </ScrollView>
+
+        <View >
+         
+          <Text style={styles.category}></Text>
+         
+        
+          
+
+          
+   
+        
+      
+         
+     
+        
      
         </View>
       </View>
-    </SafeAreaView>
+     
   );
 }
 
 const styles = StyleSheet.create({
-  header: {
-    marginHorizontal: 150,
-    paddingVertical: 100,
-    alignItems: "center",
-    justifyContent: "center",
-    display: "flex",
-  },
+
   image: {
     width: Dimensions.get("window").width,
-    height: 250,
+    height: 390,
   },
   name: {
-  
-    color: "White",
-    fontWeight: "bold",
-    alignItems: "center",
-    justifyContent: "center",
+    
+    fontFamily:"Fakt Pro",
+    fontSize: 32,
+    fontWeight: "500",
+    lineHeight: 40, 
+    color:"white",
   },
   category: {
     color: "gray",
@@ -89,23 +125,65 @@ const styles = StyleSheet.create({
   description: {
     color: "gray",
   },
-  menuImage: {
-    height: 100,
-    width: "80%",
+
+  ratingText: {
+    color: "white",
   },
-  rating: {
-    color: "gray",
+  ratingContainer: {
+    backgroundColor: "rgba(0,0,0,0.3)",
+    width:"100%",
+    paddingLeft:8,
+    position:'absolute',
+    bottom:0,
+    left:0,
   },
   openingHours: {
-    color: "gray",
+    color: "white",
+    paddingVertical:4,
+    fontSize:16
   },
-  iconContainer: {
-    height: 200,
-    width: 500,
-    margin: 30,
-    padding: 30,
-    display: "flex",
-    borderRadius: 80,
+  ScreenContainer: {
+    flex: 1,
+    backgroundColor:"black"
+  
   },
+ 
+  ScrollViewFlex : {
+    paddingHorizontal:20,
+    paddingTop:10,
 
+  },
+  menuButton :{
+    borderRadius: 16,
+    backgroundColor: "#F00",
+    paddingVertical:8,
+    paddingHorizontal:24,
+
+  },
+  menuText:{
+    color: "#FFF",
+textAlign: "center",
+fontFamily: "Inter",
+fontSize: 16,
+fontStyle: "normal",
+fontWeight: "700",
+lineHeight: 24,
+  },
+  reservationContainer:{
+    alignItems:"center",
+    marginTop:40,
+    
+  },
+  icon:{
+    width:24,
+    height:24,
+    marginTop:8,
+    marginLeft:-8,
+    
+  },
+  menuImage:{
+    height:200,
+    width:200,
+  }
+  
 });

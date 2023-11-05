@@ -10,6 +10,8 @@ import {
   VerificationCodeScreen,
   NewPasswordScreen,
   RegisterScreen,
+  ReservationListScreen,
+  MenuContainer,
 } from "../screens";
 
 const Stack = createStackNavigator();
@@ -22,6 +24,7 @@ const Navigators = () => {
         <Stack.Screen name="Splash" component={Splashscreen} />
         <Stack.Screen name="TabNav" component={TabNavigator} />
         <Stack.Screen name="RestaurantDetails" component={RestaurantDetails} />
+        
         <Stack.Screen
           name="ForgetPasswordEmail"
           component={ForgetPasswordEmail}
@@ -32,6 +35,8 @@ const Navigators = () => {
         />
         <Stack.Screen name="NewPasswordScreen" component={NewPasswordScreen} />
         <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+        <Stack.Screen name="ReservationListScreen" component={ReservationListScreen} />
+        <Stack.Screen name="MenuContainer" component={MenuContainer}  options={{presentation:"transparentModal"}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
