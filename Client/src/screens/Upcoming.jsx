@@ -6,11 +6,11 @@ import store from '../features/store'
 import { Display } from "../utils";
 import React, { useState, useEffect } from 'react';
 import UpcomingList from './UpcomingList.jsx'
+import { useIsFocused } from '@react-navigation/native';
 
 
 
-
-const Upcoming = ({ route }) => {
+const Upcoming = () => {
 
     const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
@@ -18,6 +18,7 @@ const Upcoming = ({ route }) => {
     const [upcomingReservations, setUpcomoingReservations] = useState([])
     const [restaurants, setRestaurants] = useState([])
 
+    const isFocused = useIsFocused();
 
     const customer = store.getState().customer
 
@@ -50,12 +51,14 @@ const Upcoming = ({ route }) => {
 
 
     useEffect(() => {
+        if (isFocused) {
+            fetchUpcoming()
+            findRestaurantName()
 
-        fetchUpcoming()
-        findRestaurantName()
+        }
 
 
-    }, [])
+    }, [isFocused])
 
     const sortedReservations = upcomingReservations.slice().sort((a, b) => new Date(a.date) - new Date(b.date))
 

@@ -1,10 +1,7 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { Upcoming, History } from '../screens'
 import { Display } from "../utils";
-import { StyleSheet, Text, View } from 'react-native'
-import store from '../features/store'
-import React, { useState, useEffect } from 'react';
-import axios from 'axios'
+import { StyleSheet } from 'react-native'
 
 
 

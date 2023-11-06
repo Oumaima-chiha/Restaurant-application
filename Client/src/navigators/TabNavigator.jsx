@@ -1,18 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { Pressable, StyleSheet, TouchableOpacity } from 'react-native'
+import React from "react";
+import { StyleSheet } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Homescreen, ReservationListScreen, MessagesScreen, LoginScreen } from '../screens'
 import { AntDesign } from '@expo/vector-icons'
 import { Colors } from "../contants";
 import { BlurView } from '@react-native-community/blur'
-import store from '../features/store'
-import axios from 'axios'
+
 
 const Tab = createBottomTabNavigator()
 
 const TabNavigator = () => {
 
-    const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
 
 
