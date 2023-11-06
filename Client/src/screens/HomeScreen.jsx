@@ -21,6 +21,8 @@ export default function HomeScreen({ navigation, route }) {
 
 
   const [restaurant, setRestaurant] = useState([]);
+  const [filterData,setFilerData]= useState([]);
+  const[searchTerm,setSearchTerm]=useState("");
 
   const fetchData = async () => {
     try {
@@ -57,6 +59,16 @@ export default function HomeScreen({ navigation, route }) {
     navigation.navigate("RestaurantDetails", { restaurant });
     console.log(restaurant)
   };
+  const handleSearch=(val)=>setSearchTerm(val)
+  useEffect(()=>{
+    if(searchTerm && searchTerm !==''){
+      const newData=restaurant.filter(elem=>elem.name.toLowerCase().includes(searchTerm))
+      setFilerData(newData)
+    }
+    else{
+      setFilerData(restaurant)
+    }
+  },[searchTerm])
 
 
   return (
@@ -79,12 +91,15 @@ export default function HomeScreen({ navigation, route }) {
               size={24}
               color={Colors.DEFAULT_RED}
               style={styles.search}
+
             />
           </TouchableOpacity>
           <TextInput
             placeholder="Find a restaurant..."
             placeholderTextColor={Colors.primaryLightGreyHex}
             style={styles.TextInputContainer}
+            value={searchTerm}
+            onChangeText={(text) => setSearchTerm(text)}
           />
         </View>
       </View>
@@ -106,7 +121,7 @@ export default function HomeScreen({ navigation, route }) {
         {
           restaurant.map((rest) => (
             <View key={rest.id} >
-              <RestaurantCard restaurant={rest} onPress={(restaurant) => handleButtonPress(restaurant)} />
+              <RestaurantCard restaurant={rest} onPress={(restaurant) => handleButtonPress(restaurant)} onSearch={handleSearch}/>
             </View>
           ))}
       </ScrollView>
