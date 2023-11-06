@@ -1,19 +1,51 @@
-import React  from "react";
 import {
   View,
   Text,
   Image,
   StyleSheet,
  ScrollView,
-  TouchableOpacity
+  TouchableOpacity,
+  TextInput,
+  Dimensions,
+  Modal,
+  Pressable,
+
+  
 } from "react-native";
-import {  Images } from "../contants";
 import { useNavigation } from "@react-navigation/native";
-import { Dimensions } from "react-native";
+import DateTimePicker from '@react-native-community/datetimepicker';
+import React, { useState, useRef } from "react";
+import { Colors } from '../contants';
+import { FontSize, FontFamily, Color, Border, Padding } from "../../GlobalStyles";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
+import store from '../features/store'
+import axios from "axios";
+import ToastMessage from "../Component/ToastMessage";
+
+
+
+
+
 import moment from "moment" ;
 
 export default function RestaurantDetails({ route }) {
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+
+
+  const customer = store.getState().customer
+
+  const [showForm, setShowForm] = useState(false)
+  const [reservation, setReservation] = useState({ date: '', time: '', guest_number: null })
+  const [mode, setMode] = useState('date')
+  const [showDateTime, setShowDateTime] = useState(false)
+  const [showToast, setShowToast] = useState(false);
+  const [showToast2, setShowToast2] = useState(false);
+  const [spotsRemaining, setSpotsRemaining] = useState('')
+  const toastRef = useRef(null);
+
+
   const {
+    id,
     name,
     main_image,
     rating,
@@ -24,21 +56,118 @@ export default function RestaurantDetails({ route }) {
     City,
     category
   } = route.params.restaurant;
-  console.log(route.params.restaurant);
+
+
+
   const navigation = useNavigation();
 
+  const hideDateTime = () => {
+    setShowDateTime(false)
+  }
+
+
+  const makeReservation = async () => {
+
+    try {
+      const myReservation = await axios.post(`http://${apiUrl}:3000/api/reservations/${customer.id}/${id}`, reservation)
+      console.log("Your reservation request was sent!", myReservation)
+      setSpotsRemaining(`Your reservation request was sent!`)
+      setShowToast2(true);
+      if (toastRef.current) {
+        toastRef.current.show();
+      }
+
+      setReservation({ date: '', time: '', guest_number: null })
+      toggleForm()
+    } catch (error) {
+      console.log("Couldn't send reservation request :(", error)
+      if (error.response.status === 400) {
+        if (error.response.data > 1) {
+          setSpotsRemaining(`This date only has ${error.response.data} reservation spots remaining`)
+        }
+        else if (error.response.data === 1) {
+          setSpotsRemaining(`This date only has ${error.response.data} reservation spot remaining`)
+        }
+        else if (error.response.data === 0) {
+          setSpotsRemaining(`This date has no reservation spots remaning`)
+        }
+
+        setShowToast(true);
+        if (toastRef.current) {
+          toastRef.current.show();
+        }
+      }
+      if (error.response.status === 422) {
+        setSpotsRemaining('Reservation info missing')
+        setShowToast(true);
+        if (toastRef.current) {
+          toastRef.current.show();
+        }
+      }
+      if (error.response.status === 404) {
+        setSpotsRemaining('You need to be logged in')
+        setShowToast(true);
+        if (toastRef.current) {
+          toastRef.current.show();
+        }
+      }
+    }
+
+  }
+
+
+  const handleDateChange = (event, selectedDate) => {
+    let currentDate = selectedDate || ''
+
+    if (mode === 'date') {
+
+      currentDate = currentDate.toISOString().slice(0, 10)
+    }
+
+
+    if (event.type === 'set') {
+      console.log('Selected date:', (currentDate));
+      setReservation((inputs) => ({ ...inputs, [mode]: currentDate }))
+      hideDateTime()
+
+    }
+
+    else hideDateTime()
+
+  }
+
+  const handleChange = (name, value) => {
+
+
+    setReservation((inputs) => ({ ...inputs, [name]: value }))
+
+
+  }
+
+  const toggleForm = () => {
+
+    setShowForm(!showForm)
+  }
+
+
+  const toggleDateTime = (mode) => {
+
+    setMode(mode)
+    setShowDateTime(true)
+  }
+}
   return (
-    <View style={styles.ScreenContainer}>
-      <View>
-      <Image source={{ uri: main_image.trim() }} style={styles.image} />
-      <View style={styles.ratingContainer}>
-      <Text style={styles.ratingText}>{`Rating: ${rating}`}</Text>
-      </View>
-      </View>
-   
-    <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.ScrollViewFlex}>
+    <SafeAreaView>
+
+      {showToast2 && (
+        <ToastMessage
+          ref={toastRef}
+          type="success"
+          text={spotsRemaining}
+          timeout={3000}
+        />
+      )}
+      <View style={styles.header}>
         <View
           style={{
             flexDirection: "row",
@@ -57,59 +186,107 @@ export default function RestaurantDetails({ route }) {
 
           
         </View>
-       
-        <Text
-            style={styles.openingHours}
-          >{` ${moment(opening_time).format('LT')} - ${moment(closing_time).format('LT')}`}</Text>
-          <View style={styles.categoryContainer}>
-           <Text style={styles.category}>{category}</Text>
-           </View>
-          <View   style={{
-            flexDirection: "row",
-            alignItems: "center",
-            gap:5
-            
-          }}>
-            <Image source={Images.PINICON}  style={styles.icon}/>
-           <Text
-            style={styles.openingHours}
-          >{City}</Text>
-          
-          </View>
-        <Text style={styles.description}>{description}</Text> 
-        <View style={styles.reservationContainer}>
-        <TouchableOpacity style={styles.menuButton} onPress={() => navigation.navigate("ReservationListScreen")} >
-          <Text style={styles.menuText}>
-     Make a Reservation
-    </Text>
-          </TouchableOpacity>
-          </View>
-         
-        
-        </ScrollView>
 
-        <View >
-         
-         
+
+        <View style={styles.iconContainer}>
+          <Text style={styles.name}>{name}</Text>
+          <Text style={styles.category}></Text>
+          <Button title="Menu" onPress={() => navigation.navigate("")} >
+            <Text style={styles.InfoTitle}>{description}</Text>
+            {menu_images.map((menuImage, index) => (
+              <Image
+                key={index}
+                source={{ uri: menuImage }}
+                style={styles.menuImage}
+              />
+            ))}
+          </Button>
+          <Text style={styles.rating}>{`Rating: 4.0`}</Text>
+          <Text
+            style={styles.openingHours}
+          >{`Opens: ${moment(opening_time).format('LT')} - Closes: ${moment(closing_time).format('LT')}`}</Text>
+          <Button title="Go Back" onPress={() => navigation.goBack()} />
+          <Button title="Make A reservation " onPress={toggleForm} />
+
+          {showForm && <Modal transparent={true} visible={true} onPress={toggleForm} >
+
+
+            <Pressable style={{ backgroundColor: '#000000aa', flex: 1 }} onPress={toggleForm}>
+              {showToast && (
+                <ToastMessage
+                  ref={toastRef}
+                  type="danger"
+                  text={spotsRemaining}
+                  timeout={3000}
+                />
+              )}
+
+
+
+              <View style={{ backgroundColor: Colors.DARK_ONE, margin: 20, padding: 40, borderRadius: 10, top: 250, height: 350, justifyContent: "space-between" }}
+              >
+                <KeyboardAwareScrollView>
+
+                  <Pressable style={styles.btn} onPress={() => { toggleDateTime("date") }} ><Text style={styles.btnText}>Date</Text></Pressable>
+                  <Pressable style={styles.btn} onPress={() => { toggleDateTime("time") }}><Text style={styles.btnText}>Time</Text></Pressable>
+
+                  {showDateTime && <DateTimePicker
+                    mode={mode}
+                    value={new Date(Date.now())}
+                    is24Hour={true}
+                    confirmBtnText="Confirm"
+                    display="default"
+                    minimumDate={new Date()}
+                    timeZoneName={'Africa/Tunis'}
+                    timeZoneOffsetInMinutes={0}
+                    onChange={handleDateChange}
+                  />}
+                  <Text style={{ fontSize: 25, color: "#ffffff" }}>Guests</Text>
+                  <TextInput
+                    keyboardType="numeric"
+                    onChangeText={(text) => handleChange('guest_number', +text)}
+                    style={styles.inputControlGuest}
+
+                  />
+                </KeyboardAwareScrollView>
+
+                <Pressable style={styles.btn} onPress={makeReservation} ><Text style={styles.btnText}>Submit</Text></Pressable>
+
+
+              </View>
+            </Pressable>
+
+
+
+          </Modal>
+}
         </View>
       </View>
      
-  );
-}
+</SafeAreaView>
+ )
+
+
+
 
 const styles = StyleSheet.create({
-
+  header: {
+    marginHorizontal: 150,
+    paddingVertical: 100,
+    alignItems: "center",
+    justifyContent: "center",
+    display: "flex",
+  },
   image: {
     width: Dimensions.get("window").width,
     height: 480,
   },
   name: {
-    
-    fontFamily:"Fakt Pro",
-    fontSize: 32,
-    fontWeight: "500",
-    lineHeight: 40, 
-    color:"white",
+  
+    color: "White",
+    fontWeight: "bold",
+    alignItems: "center",
+    justifyContent: "center",
   },
   category: {
     color: "black",
@@ -140,52 +317,15 @@ const styles = StyleSheet.create({
     left:0,
   },
   openingHours: {
-    color: "white",
-    paddingVertical:4,
-    fontSize:16
+    color: "gray",
   },
-  ScreenContainer: {
-    flex: 1,
-    backgroundColor:"black"
-  
+  iconContainer: {
+    height: 200,
+    width: 500,
+    margin: 30,
+    padding: 30,
+    display: "flex",
+    borderRadius: 80,
   },
- 
-  ScrollViewFlex : {
-    paddingHorizontal:20,
-    paddingTop:10,
 
-  },
-  menuButton :{
-    borderRadius: 16,
-    backgroundColor: "#F00",
-    paddingVertical:8,
-    paddingHorizontal:24,
-
-  },
-  menuText:{
-    color: "#FFF",
-    textAlign: "center",
-    fontFamily: "Inter",
-    fontSize: 16,
-    fontStyle: "normal",
-    fontWeight: "700",
-    lineHeight: 24,
-  },
-  reservationContainer:{
-    alignItems:"center",
-    marginTop:40,
-    
-  },
-  icon:{
-    width:24,
-    height:24,
-    marginTop:8,
-    marginLeft:-8,
-    
-  },
-  menuImage:{
-    height:200,
-    width:200,
-  }
-  
 });

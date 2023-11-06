@@ -1,35 +1,44 @@
 import { Colors } from "../contants";
 import axios from "axios";
-import React, { useState } from "react";
-import Toast from 'react-native-toast-message';
+import { useDispatch } from 'react-redux';
+import { setId, setFullname, setEmail } from '../../src/features/customerSlice';
+import React, { useState, useRef } from "react";
 import {
-  Text,
   StyleSheet,
+  SafeAreaView,
   View,
-  TextInput,
-  ScrollView,
+  Text,
   TouchableOpacity,
+  TextInput,
 } from "react-native";
+import ToastMessage from "../Component/ToastMessage";
 
-const LoginScreen = ({ navigation }) => {
+export default function LoginScreen({ navigation }) {
+
+  const dispatch = useDispatch();
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+
+
+
+
   const [inputs, setInputs] = useState({ email: '', password: '' });
+  const [showToast, setShowToast] = useState(false);
+  const [showToast1, setShowToast1] = useState(false);
+  const toastRef = useRef(null);
 
   const handleButtonPress = () => {
-    navigation.navigate("RegisterScreen")
+    navigation.navigate('RegisterScreen');
   };
-
 
   const handleChange = (name, value) => {
     setInputs((values) => ({ ...values, [name]: value }));
   };
 
   const validator = () => {
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(inputs.email)) {
-      Toast.show({
-        type: 'error',
-        text1: 'Invalid email format',
-      });
+
       return false;
     }
     return true;
@@ -38,149 +47,183 @@ const LoginScreen = ({ navigation }) => {
   const handleSubmit = async () => {
     if (validator()) {
       try {
-        const { data } = await axios.post('http://172.16.0.59:3000/api/customers/signin', inputs);
-        console.log('Customer logged successfully', data);
-        Toast.show({
-          type: 'success',
-          text1: 'Successfully Logged In',
-        });
-        // Navigate to the next screen or perform any other necessary actions
-      } catch (error) {
-        if (error.response && error.response.status === 410 && error.response.data.error === "Email doesn't exist") {
-          Toast.show({
-            type: 'error',
-            text1: 'Please provide a correct email',
-          });
-        } else if (error.response && error.response.status === 411 && error.response.data.error === 'unvalid password') {
-          Toast.show({
-            type: 'error',
-            text1: 'Please provide a correct password',
-          });
-        } else {
-          console.log(error);
+
+        const { data } = await axios.post(`http://${apiUrl}:3000/api/customers/signin`, inputs);
+        dispatch(setId(data.customer.id));
+        dispatch(setFullname(data.customer.fullname));
+        dispatch(setEmail(data.customer.email));
+
+
+        console.log('Customer logged successfully');
+
+        setShowToast1(true);
+        if (toastRef.current) {
+          toastRef.current.show();
         }
+
+        navigation.navigate('Home')
+
+      } catch (error) {
+        setShowToast(true);
+        if (toastRef.current) {
+          toastRef.current.show();
+        }
+        console.log(error);
       }
     }
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.loginParent}>
-        <Text style={styles.login1}>Login</Text>
 
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Email</Text>
-          <TextInput
-            style={styles.inputField}
-            placeholder="e.g., abc@example.com"
-            placeholderTextColor="#c8c8c8"
-            onChangeText={(text) => handleChange('email', text)}
-          />
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.DEFAULT_BLACK }}>
+      {showToast && (
+        <ToastMessage
+          ref={toastRef}
+          type="danger"
+          text="Wrong information"
+          timeout={3000}
+        />
+      )}
+
+      {showToast1 && (
+        <ToastMessage
+          ref={toastRef}
+          type="success"
+          text="logged in successfully"
+          timeout={3000}
+        />
+      )}
+      <View style={styles.container}>
+
+        <View style={styles.header}>
+          <Text style={styles.title}>
+            Sign in to <Text style={{ color: Colors.DEFAULT_RED }}>MyApp</Text>
+          </Text>
+
+          <Text style={styles.subtitle}>
+            Login so you can make a reservation.
+          </Text>
         </View>
-
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Your Password</Text>
-          <TextInput
-            style={styles.inputField}
-            secureTextEntry={true}
-            onChangeText={(text) => handleChange('password', text)}
-          />
-          <TouchableOpacity onPress={handleSubmit} style={styles.forgotPassword}>
-            <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+        <View style={styles.form}>
+          <View style={styles.input}>
+            <Text style={styles.inputLabel}>Email address</Text>
+            <TextInput
+              autoCapitalize="none"
+              autoCorrect={false}
+              keyboardType="email-address"
+              onChangeText={(text) => handleChange('email', text)}
+              placeholder="john@example.com"
+              placeholderTextColor="#6b7280"
+              style={styles.inputControl}
+            />
+          </View>
+          <View style={styles.input}>
+            <Text style={styles.inputLabel}>Password</Text>
+            <TextInput
+              autoCorrect={false}
+              onChangeText={(text) => handleChange('password', text)}
+              placeholder="********"
+              placeholderTextColor="#6b7280"
+              style={styles.inputControl}
+              secureTextEntry={true}
+            />
+          </View>
+          <TouchableOpacity>
+            <Text style={{ color: Colors.DEFAULT_RED }}>Forgot Password?</Text>
+          </TouchableOpacity>
+          <View style={styles.formAction}>
+            <TouchableOpacity onPress={handleSubmit}>
+              <View style={styles.btn}>
+                <Text style={styles.btnText}>Sign in</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity onPress={handleButtonPress} style={{ marginTop: 'auto' }}>
+            <Text style={styles.formFooter}>
+              Don't have an account?{' '}
+              <Text style={{ textDecorationLine: 'underline', color: Colors.DEFAULT_RED }}>Sign up</Text>
+            </Text>
           </TouchableOpacity>
         </View>
-
-        <TouchableOpacity style={styles.loginButtonContainer} onPress={handleSubmit}>
-          <Text style={styles.loginButtonText}>Login</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={handleButtonPress}
-          style={styles.dontHaveAnAccountParent}
-        >
-          <Text style={styles.dontHaveAn}>Don’t have an account?</Text>
-          <Text style={styles.register}>Register</Text>
-        </TouchableOpacity>
       </View>
-  
-    </ScrollView>
+
+    </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: Colors.SECONDARY_BLACK,
-    justifyContent: "center",
-    alignItems: "center",
+    padding: 24,
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
   },
-  loginParent: {
-    marginTop: 16,
-    padding: 20,
-    width: "100%",
-    height: "70%",
+  header: {
+    marginVertical: 36,
   },
-  login1: {
-    color: Colors.DEFAULT_RED,
-    fontWeight: "bold",
-    fontSize: 30,
-    textAlign: "center",
-    paddingTop: 35,
+  title: {
+    fontSize: 27,
+    fontWeight: '700',
+    color: Colors.DEFAULT_WHITE,
+    marginBottom: 6,
+    textAlign: 'center',
   },
-  inputContainer: {
+  subtitle: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#929292',
+    textAlign: 'center',
+  },
+  form: {
+    marginBottom: 130,
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
+  },
+  formAction: {
+    marginVertical: 24,
+  },
+  formFooter: {
+    fontSize: 17,
+    fontWeight: '600',
+    color: Colors.DEFAULT_WHITE,
+    textAlign: 'center',
+    letterSpacing: 0.15,
+  },
+  input: {
     marginBottom: 16,
   },
-  label: {
+  inputLabel: {
+    fontSize: 17,
+    fontWeight: '600',
     color: Colors.DEFAULT_WHITE,
-    fontSize: 20,
     marginBottom: 8,
   },
-  inputField: {
-    borderWidth: 1.5,
+  inputControl: {
+    height: 44,
+    backgroundColor: Colors.DEFAULT_BLACK,
     borderColor: Colors.DEFAULT_RED,
+    borderWidth: 1,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    fontSize: 15,
+    fontWeight: '500',
+    color: Colors.DEFAULT_WHITE,
+  },
+  btn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: 8,
-    padding: 16,
-    color: Colors.DEFAULT_WHITE,
-    fontSize: 18,
-  },
-  forgotPassword: {
-    marginTop: 8,
-    textAlign: "left",
-  },
-  forgotPasswordText: {
-    color: Colors.DEFAULT_RED,
-    fontSize: 16,
-    textDecorationLine: "underline",
-  },
-  loginButtonContainer: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     backgroundColor: Colors.DEFAULT_RED,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 20,
-    padding: 10,
-    marginTop: 48,
   },
-  loginButtonText: {
-    color: Colors.DEFAULT_WHITE,
-    fontWeight: "bold",
-    fontSize: 20,
+  btnText: {
+    fontSize: 18,
+    lineHeight: 26,
+    fontWeight: '600',
+    color: '#fff',
   },
-  dontHaveAnAccountParent: {
-    flexDirection: "row",
-    marginTop: 55,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  dontHaveAn: {
-    color: Colors.DEFAULT_WHITE,
-    fontSize: 20,
-  },
-  register: {
-    color: Colors.DEFAULT_RED,
-    marginLeft: 6,
-    fontSize: 16,
-    textDecorationLine: "underline",
-    fontWeight: "bold",
-  },
-});
 
-export default LoginScreen;
+});
