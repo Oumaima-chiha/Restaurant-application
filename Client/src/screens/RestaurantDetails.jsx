@@ -1,4 +1,4 @@
-import React  from "react";
+
 import {
   SafeAreaView,
   View,
@@ -13,7 +13,7 @@ import {
   ScrollView,
   TouchableOpacity
 } from "react-native";
-import {  Images } from "../contants";
+
 import { useNavigation } from "@react-navigation/native";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import React, { useState, useRef } from "react";
@@ -32,6 +32,18 @@ import { AntDesign } from '@expo/vector-icons';
 
 
 export default function RestaurantDetails({ route }) {
+  
+
+  const customer = store.getState().customer
+
+  const [showForm, setShowForm] = useState(false)
+  const [reservation, setReservation] = useState({ date: '', time: '', guest_number: null })
+  const [mode, setMode] = useState('date')
+  const [showDateTime, setShowDateTime] = useState(false)
+  const [showToast, setShowToast] = useState(false);
+  const [showToast2, setShowToast2] = useState(false);
+  const [spotsRemaining, setSpotsRemaining] = useState('')
+  const toastRef = useRef(null);
   const {
     name,
     main_image,

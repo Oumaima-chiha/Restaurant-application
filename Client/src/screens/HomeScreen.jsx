@@ -30,6 +30,7 @@ export default function HomeScreen({ navigation, route }) {
       if (response.ok) {
         const data = await response.json();
         setRestaurant(data);
+		setFilerData(data)
 
       } else {
         console.error("Failed to fetch data");
@@ -43,7 +44,6 @@ export default function HomeScreen({ navigation, route }) {
 
     fetchData()
 
-    console.log('aaaa')
 
 
 
@@ -62,8 +62,11 @@ export default function HomeScreen({ navigation, route }) {
   const handleSearch=(val)=>setSearchTerm(val)
   useEffect(()=>{
     if(searchTerm && searchTerm !==''){
-      const newData=restaurant.filter(elem=>elem.name.toLowerCase().includes(searchTerm))
+      const newData=restaurant.filter(elem=>elem.name.toLowerCase().includes(searchTerm.toLowerCase()))
+      console.log(searchTerm)
+     
       setFilerData(newData)
+      console.log(newData)
     }
     else{
       setFilerData(restaurant)
@@ -119,7 +122,7 @@ export default function HomeScreen({ navigation, route }) {
       </View>
       <ScrollView vertical>
         {
-          restaurant.map((rest) => (
+          filterData.map((rest) => (
             <View key={rest.id} >
               <RestaurantCard restaurant={rest} onPress={(restaurant) => handleButtonPress(restaurant)} onSearch={handleSearch}/>
             </View>
