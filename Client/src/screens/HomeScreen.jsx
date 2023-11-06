@@ -23,7 +23,7 @@ export default function HomeScreen({ navigation, route }) {
 
 
   const [restaurant, setRestaurant] = useState([]);
-  const [filterData,setFilerData]= useState([]);
+  const [filterData,setFilterData]= useState([]);
   const[searchTerm,setSearchTerm]=useState("");
 
   const fetchData = async () => {
@@ -32,7 +32,7 @@ export default function HomeScreen({ navigation, route }) {
       if (response.ok) {
         const data = await response.json();
         setRestaurant(data);
-		setFilerData(data)
+		setFilterData(data)
 
       } else {
         console.error("Failed to fetch data");
@@ -70,11 +70,11 @@ export default function HomeScreen({ navigation, route }) {
       const newData=restaurant.filter(elem=>elem.name.toLowerCase().includes(searchTerm.toLowerCase()))
       console.log(searchTerm)
      
-      setFilerData(newData)
+      setFilterData(newData)
       console.log(newData)
     }
     else{
-      setFilerData(restaurant)
+      setFilterData(restaurant)
     }
   },[searchTerm])
 
