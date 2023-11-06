@@ -1,14 +1,10 @@
-import { StyleSheet, Text, View, ScrollView } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import { LinearGradient } from "expo-linear-gradient";
-import { Colors, Images } from "../contants";
+import { Colors } from "../contants";
 import { Color, FontSize, Border } from "../../GlobalStyles";
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import axios from 'axios';
-import store from '../features/store'
 import { Display } from "../utils";
 import moment from 'moment'
-import { Dimensions } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 
 
@@ -18,6 +14,7 @@ const HistoryList = ({ reservation, restaurants }) => {
     const restaurantName = restaurants.slice().find((restaurant) => {
         return restaurant.id === reservation.restaurantId
     })
+
 
 
     return (
@@ -30,7 +27,8 @@ const HistoryList = ({ reservation, restaurants }) => {
                 locations={[0, 1]}
                 colors={["#000", "rgba(0, 0, 0, 0)"]}
             />
-            <Text style={[styles.pending, styles.rosemarysTypo]}>{reservation.status}</Text>
+            <View style={[reservation.status === 'Pending' ? styles.rectangleViewPending : reservation.status === 'Declined' ? styles.rectangleViewRejected : null, styles.iphone131412ChildLayout1]} />
+            <Text style={[reservation.status === 'Pending' ? styles.pending : reservation.status === 'Declined' ? styles.rejected : null, styles.rosemarysTypo]}>{reservation.status}</Text>
             <Text style={[styles.rosemarys, styles.rosemarysLayout]}>{restaurantName?.name}</Text>
             <Text style={[styles.text, styles.textPosition]}>{moment(reservation.date).calendar()}</Text>
             <Text style={[styles.pm, styles.rosemarysTypo]}>{moment(reservation.time).utcOffset('-000').format('LT')}</Text>
@@ -173,7 +171,13 @@ const styles = StyleSheet.create({
         backgroundColor: "transparent",
 
     },
-    rectangleView: {
+    rectangleViewRejected: {
+        top: 114,
+        backgroundColor: "#c04b4b",
+        left: 1,
+        position: "absolute",
+    },
+    rectangleViewPending: {
         top: 114,
         backgroundColor: "#d3d71e",
         left: 1,
@@ -191,16 +195,14 @@ const styles = StyleSheet.create({
         position: "absolute",
     },
     pending: {
-        top: 128,
+        top: 120,
         color: "#c0b54b",
-        fontSize: FontSize.size_lg,
         left: 290,
         lineHeight: 20,
     },
-    accepted: {
-        top: 325,
-        color: "#4bc06c",
-        fontSize: FontSize.size_lg,
+    rejected: {
+        top: 120,
+        color: "#c04b4b",
         left: 290,
         lineHeight: 20,
     },

@@ -4,6 +4,8 @@ import { Text, StyleSheet, View, TextInput, ScrollView, TouchableOpacity, SafeAr
 import Toast from 'react-native-toast-message';
 import axios from "axios";
 import ToastMessage from "../Component/ToastMessage";
+import { useDispatch } from 'react-redux';
+
 
 const RegisterScreen = ({ navigation }) => {
   const [inputs, setInputs] = useState({ fullname: '', email: '', password: '' });
@@ -12,6 +14,7 @@ const RegisterScreen = ({ navigation }) => {
   const [showToast2, setShowToast2] = useState(false);
   const [showToast3, setShowToast3] = useState(false);
   const toastRef = useRef(null);
+  const dispatch = useDispatch();
 
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
@@ -59,6 +62,8 @@ const RegisterScreen = ({ navigation }) => {
         if (toastRef.current) {
           toastRef.current.show();
         }
+
+        dispatch(setOwnerId(data.owner));
         navigation.navigate('LoginScreen');
       } catch (error) {
         if (error.response && error.response.status === 400 && error.response.data.error === 'Email already exists') {

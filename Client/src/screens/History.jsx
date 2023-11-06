@@ -6,6 +6,7 @@ import store from '../features/store'
 import { Display } from "../utils";
 import HistoryList from './HistoryList.jsx'
 import React, { useState, useEffect } from 'react';
+import { useIsFocused } from '@react-navigation/native';
 
 
 
@@ -17,6 +18,9 @@ const History = () => {
 
     const [expiredReservations, setExpiredReservations] = useState([])
     const [restaurants, setRestaurants] = useState([])
+
+
+    const isFocused = useIsFocused();
 
 
     const apiUrl = process.env.EXPO_PUBLIC_API_URL;
@@ -50,10 +54,13 @@ const History = () => {
 
 
     useEffect(() => {
+        if (isFocused) {
+            fetchHistory()
+            findRestaurantName()
+            console.log('a')
+        }
 
-        fetchHistory()
-        findRestaurantName()
-    }, [])
+    }, [isFocused])
 
     return (
         <View style={styles.container}>

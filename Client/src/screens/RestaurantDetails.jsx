@@ -19,6 +19,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
 import store from '../features/store'
 import axios from "axios";
 import ToastMessage from "../Component/ToastMessage";
+import moment from 'moment'
 
 
 
@@ -148,11 +149,11 @@ export default function RestaurantDetails({ route }) {
 
     setMode(mode)
     setShowDateTime(true)
-
   }
 
   return (
     <SafeAreaView>
+
       {showToast2 && (
         <ToastMessage
           ref={toastRef}
@@ -186,17 +187,17 @@ export default function RestaurantDetails({ route }) {
               />
             ))}
           </Button>
-          <Text style={styles.rating}>{`Rating: ${rating}`}</Text>
+          <Text style={styles.rating}>{`Rating: 4.0`}</Text>
           <Text
             style={styles.openingHours}
-          >{`Opening Hours: ${opening_time} - ${closing_time}`}</Text>
+          >{`Opens: ${moment(opening_time).format('LT')} - Closes: ${moment(closing_time).format('LT')}`}</Text>
           <Button title="Go Back" onPress={() => navigation.goBack()} />
           <Button title="Make A reservation " onPress={toggleForm} />
 
           {showForm && <Modal transparent={true} visible={true} onPress={toggleForm} >
 
 
-            <Pressable style={{ backgroundColor: '#000000aa', flex: 1 }} >
+            <Pressable style={{ backgroundColor: '#000000aa', flex: 1 }} onPress={toggleForm}>
               {showToast && (
                 <ToastMessage
                   ref={toastRef}
@@ -331,30 +332,7 @@ const styles = StyleSheet.create({
     display: "flex",
     borderRadius: 80,
   },
-  // textInputDatePickerPlaceHolder: {
-  //   fontFamily: "IBMPlexSans-Regular",
-  //   color: "#6f7482",
-  //   fontSize: 16,
-  // },
-  // textInputDatePickerValue: {
-  //   position: "absolute",
-  //   left: 44,
-  //   top: 35,
-  //   width: 318,
-  //   height: 68,
-  // },
-  // textInputDatePicker1PlaceHolder: {
-  //   fontFamily: "IBMPlexSans-Regular",
-  //   color: "#6f7482",
-  //   fontSize: 16,
-  // },
-  // textInputDatePicker1Value: {
-  //   position: "absolute",
-  //   left: 44,
-  //   top: 131,
-  //   width: 318,
-  //   height: 73,
-  // },
+
   selectValue: {
     color: "#6f7482",
     fontSize: 16,
@@ -415,7 +393,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
 
-  // modal:
+
 
 
 

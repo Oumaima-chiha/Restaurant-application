@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, ScrollView } from 'react-native'
 import { LinearGradient } from "expo-linear-gradient";
-import { Colors, Images } from "../contants";
+import { Colors } from "../contants";
 import { Color, FontSize, Border } from "../../GlobalStyles";
 import { Display } from "../utils";
 import moment from 'moment'
@@ -29,7 +29,9 @@ const UpcomingList = ({ reservation, restaurants }) => {
                 locations={[0, 1]}
                 colors={["#000", "rgba(0, 0, 0, 0)"]}
             />
-            <Text style={[styles.pending, styles.rosemarysTypo]}>{reservation.status}</Text>
+
+            <View style={[reservation.status === 'Pending' ? styles.rectangleViewPending : reservation.status === 'Approved' ? styles.rectangleViewApproved : null, styles.iphone131412ChildLayout1]} />
+            <Text style={[reservation.status === 'Pending' ? styles.pending : reservation.status === 'Approved' ? styles.accepted : null, styles.rosemarysTypo]}>{reservation.status}</Text>
             <Text style={[styles.rosemarys, styles.rosemarysLayout]}>{restaurantName?.name}</Text>
             <Text style={[styles.text, styles.textPosition]}>{moment(reservation.date).calendar()}</Text>
             <Text style={[styles.pm, styles.rosemarysTypo]}>{moment(reservation.time).utcOffset('-000').format('LT')}</Text>
@@ -172,7 +174,13 @@ const styles = StyleSheet.create({
         backgroundColor: "transparent",
 
     },
-    rectangleView: {
+    rectangleViewApproved: {
+        top: 114,
+        backgroundColor: "#4bc06c",
+        left: 1,
+        position: "absolute",
+    },
+    rectangleViewPending: {
         top: 114,
         backgroundColor: "#d3d71e",
         left: 1,
@@ -190,16 +198,14 @@ const styles = StyleSheet.create({
         position: "absolute",
     },
     pending: {
-        top: 128,
+        top: 120,
         color: "#c0b54b",
-        fontSize: FontSize.size_lg,
         left: 290,
         lineHeight: 20,
     },
     accepted: {
-        top: 325,
+        top: 120,
         color: "#4bc06c",
-        fontSize: FontSize.size_lg,
         left: 290,
         lineHeight: 20,
     },
