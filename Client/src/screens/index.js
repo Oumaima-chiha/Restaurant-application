@@ -15,6 +15,7 @@ import MenuContainer from "./MenuContainer";
 import RegisterScreen from "./RegisterScreen.jsx"
 import Upcoming from './Upcoming.jsx'
 import History from './History.jsx'
+import MenuContainer from "./MenuContainer";
 
 
 
@@ -34,4 +35,5 @@ export {
   RegisterScreen,
   Upcoming,
   History,
+  MenuContainer
 };
