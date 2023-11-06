@@ -17,10 +17,13 @@ import { useEffect } from "react";
 
 export default function HomeScreen({ navigation, route }) {
 
+const categories = ["Italian", "Tunisian", "Japanese", "Lebanese","Steakhouse","Breakfast","Mexican","French"];
+
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
 
   const [restaurant, setRestaurant] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null)
 
   const fetchData = async () => {
     try {
@@ -89,27 +92,41 @@ export default function HomeScreen({ navigation, route }) {
         </View>
       </View>
       <View>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.CategoryScrollViewStyle}
-        >
-          <View style={styles.ActiveCategory}>
-            <TouchableOpacity style={styles.CategoryStyleView}>
-              <Text style={styles.CategoryText}>category 1</Text>
-
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
+      <ScrollView
+    horizontal
+    showsHorizontalScrollIndicator={false}
+    contentContainerStyle={styles.CategoryScrollViewStyle}
+  >
+    {categories.map((category, index) => (
+      <TouchableOpacity
+        key={index}
+        style={styles.CategoryStyleView}
+        onPress={() => setSelectedCategory(category)}
+      >
+        <Text style={styles.CategoryText}>{category}</Text>
+      </TouchableOpacity>
+    ))}
+  </ScrollView>
       </View>
-      <ScrollView vertical>
-        {
-          restaurant.map((rest) => (
-            <View key={rest.id} >
-              <RestaurantCard restaurant={rest} onPress={(restaurant) => handleButtonPress(restaurant)} />
-            </View>
-          ))}
-      </ScrollView>
+<ScrollView vertical>
+  {restaurant
+    // .filter((restaurant) => {
+    //   if (categories === null) {
+    //     return true; 
+    //   }
+
+    //   return restaurant.category === categories;
+    // })
+    .map((rest) => (
+      <View key={rest.id}>
+        <RestaurantCard
+          restaurant={rest}
+          onPress={(restaurant) => handleButtonPress(restaurant)}
+        />
+      </View>
+    ))}
+</ScrollView>
+
     </ScrollView>
   );
 }
@@ -117,11 +134,11 @@ export default function HomeScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.SECONDARY_BLACK,
+    backgroundColor:'black',
   },
   screenTitle: {
     fontSize: 25,
-    color: Colors.primaryWhiteHex,
+    color: "black",
     paddingLeft: 30,
     top: 100,
   },
@@ -133,10 +150,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     margin: 30,
     borderRadius: 10,
-    backgroundColor: "#A9A9A9",
+    backgroundColor: "white",
     alignItems: "center",
     top: 100,
     marginBottom: 110,
+    
   },
   search: {
     marginHorizontal: 10,
@@ -150,15 +168,18 @@ const styles = StyleSheet.create({
   ActiveCategory: {
     flexDirection: "row",
     marginBottom: 20,
+    
   },
   CategoryText: {
-    color: Colors.primaryWhiteHex,
+    color: "black",
     margin: 10,
     padding: 10,
-    backgroundColor: Colors.DEFAULT_GREEN,
+    backgroundColor: "white",
+    
   },
   CategoryStyleView: {
     flex: 1,
-    display: "grid"
+    display: "grid",
+  
   },
 });

@@ -9,6 +9,8 @@ import {
   Dimensions,
   Modal,
   Pressable,
+  SafeAreaView,
+  Button
 
   
 } from "react-native";
@@ -155,7 +157,7 @@ export default function RestaurantDetails({ route }) {
     setMode(mode)
     setShowDateTime(true)
   }
-}
+
   return (
     <SafeAreaView>
 
@@ -266,9 +268,7 @@ export default function RestaurantDetails({ route }) {
 </SafeAreaView>
  )
 
-
-
-
+}
 const styles = StyleSheet.create({
   header: {
     marginHorizontal: 150,

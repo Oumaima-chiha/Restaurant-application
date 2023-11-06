@@ -12,7 +12,6 @@ import VerificationCodeScreen from "./VerificationCodeScreen";
 import NewPasswordScreen from "./NewPasswordScreen.jsx";
 import RegisterScreen from "./RegisterScreen.jsx";
 import MenuContainer from "./MenuContainer";
-import RegisterScreen from "./RegisterScreen.jsx"
 import Upcoming from './Upcoming.jsx'
 import History from './History.jsx'
 
@@ -34,4 +33,5 @@ export {
   RegisterScreen,
   Upcoming,
   History,
+  MenuContainer
 };
