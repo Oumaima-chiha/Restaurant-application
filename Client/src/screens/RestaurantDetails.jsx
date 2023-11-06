@@ -1,32 +1,33 @@
 import {
+  SafeAreaView,
   View,
   Text,
   Image,
   StyleSheet,
- ScrollView,
-  TouchableOpacity,
+  Button,
   TextInput,
   Dimensions,
   Modal,
   Pressable,
-
-  
+  ScrollView,
+  TouchableOpacity
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import React, { useState, useRef } from "react";
-import { Colors } from '../contants';
+import { Colors, Images } from '../contants';
 import { FontSize, FontFamily, Color, Border, Padding } from "../../GlobalStyles";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
 import store from '../features/store'
 import axios from "axios";
 import ToastMessage from "../Component/ToastMessage";
+import moment from 'moment'
+import { AntDesign } from '@expo/vector-icons';
 
 
 
 
 
-import moment from "moment" ;
 
 export default function RestaurantDetails({ route }) {
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
@@ -155,119 +156,141 @@ export default function RestaurantDetails({ route }) {
     setMode(mode)
     setShowDateTime(true)
   }
-}
-  return (
-    <SafeAreaView>
 
-      {showToast2 && (
-        <ToastMessage
-          ref={toastRef}
-          type="success"
-          text={spotsRemaining}
-          timeout={3000}
-        />
-      )}
-      <View style={styles.header}>
+  const spaced = category.toString().split(',').join('  ')
+
+  return (
+
+    <View style={styles.ScreenContainer}>
+
+      <View>
+
+        <Image source={{ uri: main_image.trim() }} style={styles.image} />
+
+        <View style={styles.ratingContainer}>
+          <TouchableOpacity title="Go Back" style={styles.backButton} onPress={() => navigation.goBack()} >
+            <Text style={styles.backText}>
+              <AntDesign name="left" size={24} color="white " />
+            </Text>
+          </TouchableOpacity>
+
+          <Text style={styles.ratingText}>{`Rating: ${'4.0'}`}</Text>
+        </View>
+      </View>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.ScrollViewFlex}>
         <View
           style={{
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
-            
+
           }}
         >
-    <Text style={styles.name}>{name}</Text>
-    <TouchableOpacity  style={styles.menuButton} onPress={() => navigation.navigate("MenuContainer",{
-          menuImages:menu_images
-        })} ><Text style={styles.menuText}>
-      Menu
-    </Text>
-      </TouchableOpacity>
+          <Text style={styles.name}>{name}</Text>
+          <TouchableOpacity style={styles.menuButton} onPress={() => navigation.navigate("MenuContainer", {
+            menuImages: menu_images
+          })} ><Text style={styles.menuText}>
+              Menu
+            </Text>
+          </TouchableOpacity>
 
-          
+
         </View>
 
+        {showToast2 && (
+          <ToastMessage
+            ref={toastRef}
+            type="success"
+            text={spotsRemaining}
+            timeout={3000}
+          />
+        )}
+        <Text
+          style={styles.openingHours}
+        >{` ${moment(opening_time).format('LT')} - ${moment(closing_time).format('LT')}`}</Text>
+        <View style={styles.categoryContainer}>
+          <Text style={styles.category}>{spaced}</Text>
+        </View>
+        <View style={{
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 5
 
-        <View style={styles.iconContainer}>
-          <Text style={styles.name}>{name}</Text>
-          <Text style={styles.category}></Text>
-          <Button title="Menu" onPress={() => navigation.navigate("")} >
-            <Text style={styles.InfoTitle}>{description}</Text>
-            {menu_images.map((menuImage, index) => (
-              <Image
-                key={index}
-                source={{ uri: menuImage }}
-                style={styles.menuImage}
-              />
-            ))}
-          </Button>
-          <Text style={styles.rating}>{`Rating: 4.0`}</Text>
+        }}>
+          <Image source={Images.PINICON} style={styles.icon} />
           <Text
             style={styles.openingHours}
-          >{`Opens: ${moment(opening_time).format('LT')} - Closes: ${moment(closing_time).format('LT')}`}</Text>
-          <Button title="Go Back" onPress={() => navigation.goBack()} />
-          <Button title="Make A reservation " onPress={toggleForm} />
+          >{City}</Text>
 
-          {showForm && <Modal transparent={true} visible={true} onPress={toggleForm} >
-
-
-            <Pressable style={{ backgroundColor: '#000000aa', flex: 1 }} onPress={toggleForm}>
-              {showToast && (
-                <ToastMessage
-                  ref={toastRef}
-                  type="danger"
-                  text={spotsRemaining}
-                  timeout={3000}
-                />
-              )}
-
-
-
-              <View style={{ backgroundColor: Colors.DARK_ONE, margin: 20, padding: 40, borderRadius: 10, top: 250, height: 350, justifyContent: "space-between" }}
-              >
-                <KeyboardAwareScrollView>
-
-                  <Pressable style={styles.btn} onPress={() => { toggleDateTime("date") }} ><Text style={styles.btnText}>Date</Text></Pressable>
-                  <Pressable style={styles.btn} onPress={() => { toggleDateTime("time") }}><Text style={styles.btnText}>Time</Text></Pressable>
-
-                  {showDateTime && <DateTimePicker
-                    mode={mode}
-                    value={new Date(Date.now())}
-                    is24Hour={true}
-                    confirmBtnText="Confirm"
-                    display="default"
-                    minimumDate={new Date()}
-                    timeZoneName={'Africa/Tunis'}
-                    timeZoneOffsetInMinutes={0}
-                    onChange={handleDateChange}
-                  />}
-                  <Text style={{ fontSize: 25, color: "#ffffff" }}>Guests</Text>
-                  <TextInput
-                    keyboardType="numeric"
-                    onChangeText={(text) => handleChange('guest_number', +text)}
-                    style={styles.inputControlGuest}
-
-                  />
-                </KeyboardAwareScrollView>
-
-                <Pressable style={styles.btn} onPress={makeReservation} ><Text style={styles.btnText}>Submit</Text></Pressable>
-
-
-              </View>
-            </Pressable>
-
-
-
-          </Modal>
-}
         </View>
-      </View>
-     
-</SafeAreaView>
- )
+        <Text style={styles.description}>{description}</Text>
+        <View style={styles.reservationContainer}>
+          <TouchableOpacity title="Make A reservation " style={styles.menuButton} onPress={toggleForm} >
+            <Text style={styles.menuText}>
+              Make a Reservation
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {showForm && <Modal transparent={true} visible={true} onPress={toggleForm} >
+
+
+          <Pressable style={{ backgroundColor: '#000000aa', flex: 1 }} onPress={toggleForm}>
+
+            {showToast && (
+              <ToastMessage
+                ref={toastRef}
+                type="danger"
+                text={spotsRemaining}
+                timeout={3000}
+              />
+            )}
 
 
 
+            <View style={{ backgroundColor: Colors.DARK_ONE, margin: 20, padding: 40, borderRadius: 10, top: 250, height: 350, justifyContent: "space-between" }}
+            >
+              <KeyboardAwareScrollView>
+
+                <Pressable style={styles.btn} onPress={() => { toggleDateTime("date") }} ><Text style={styles.btnText}>Date</Text></Pressable>
+                <Pressable style={styles.btn} onPress={() => { toggleDateTime("time") }}><Text style={styles.btnText}>Time</Text></Pressable>
+
+                {showDateTime && <DateTimePicker
+                  mode={mode}
+                  value={new Date(Date.now())}
+                  is24Hour={true}
+                  confirmBtnText="Confirm"
+                  display="default"
+                  minimumDate={new Date()}
+                  timeZoneName={'Africa/Tunis'}
+                  timeZoneOffsetInMinutes={0}
+                  onChange={handleDateChange}
+                />}
+                <Text style={{ fontSize: 25, color: "#ffffff" }}>Guests</Text>
+                <TextInput
+                  keyboardType="numeric"
+                  onChangeText={(text) => handleChange('guest_number', +text)}
+                  style={styles.inputControlGuest}
+
+                />
+              </KeyboardAwareScrollView>
+
+              <Pressable style={styles.btn} onPress={makeReservation} ><Text style={styles.btnText}>Submit</Text></Pressable>
+
+
+            </View>
+          </Pressable>
+
+
+
+        </Modal>}
+
+      </ScrollView>
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
   header: {
@@ -277,47 +300,143 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     display: "flex",
   },
+  reservationContainer: {
+    alignItems: "center",
+    marginTop: 40,
+
+  },
+  inputControl: {
+    height: 25,
+    backgroundColor: Colors.DEFAULT_WHITE,
+    borderColor: Colors.DEFAULT_RED,
+    borderWidth: 1,
+    paddingHorizontal: 16,
+    fontSize: 15,
+    fontWeight: '500',
+    color: Colors.DEFAULT_WHITE,
+  },
+  menuButton: {
+    borderRadius: 16,
+    backgroundColor: "#F00",
+    paddingVertical: 8,
+    paddingHorizontal: 24,
+
+  },
+  backButton: {
+    borderRadius: 16,
+    backgroundColor: "#F00",
+    paddingVertical: -15,
+    paddingHorizontal: 12,
+    width: 50,
+    height: 50,
+    top: -370
+
+  },
+  backText: {
+    top: 15,
+    color: "#FFF",
+
+
+  },
+  menuText: {
+    color: "#FFF",
+    textAlign: "center",
+    fontFamily: "Inter",
+    fontSize: 16,
+    fontStyle: "normal",
+    fontWeight: "700",
+    lineHeight: 24,
+  },
+  inputControlGuest: {
+    height: 25,
+    backgroundColor: Colors.DEFAULT_WHITE,
+    borderColor: Colors.DEFAULT_RED,
+    borderWidth: 1,
+    paddingHorizontal: 16,
+    fontSize: 15,
+    fontWeight: '500',
+    color: Colors.DARK_ONE,
+  },
+  ScrollViewFlex: {
+    paddingHorizontal: 20,
+    paddingTop: 10,
+
+  },
+
+  btn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: Colors.DEFAULT_RED,
+    margin: 5
+  },
+  btnText: {
+    fontSize: 18,
+    lineHeight: 26,
+    fontWeight: '600',
+    color: '#fff',
+  },
+  ScreenContainer: {
+    flex: 1,
+    backgroundColor: "black"
+
+  },
+
   image: {
     width: Dimensions.get("window").width,
     height: 480,
   },
   name: {
-  
-    color: "White",
-    fontWeight: "bold",
-    alignItems: "center",
-    justifyContent: "center",
+
+    fontFamily: "Fakt Pro",
+    fontSize: 32,
+    fontWeight: "500",
+    lineHeight: 40,
+    color: "white",
   },
   category: {
     color: "black",
-    paddingVertical:6,
-    fontSize:14,    
+    paddingVertical: 6,
+    fontSize: 14,
+    display: 'flex'
   },
   categoryContainer: {
-    backgroundColor:'rgba(255, 255, 255, 0.7)',
-    width:80,
-    alignItems:'center',
-    justifyContent:'center',
-    borderRadius:8
-    
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    width: 150,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 8,
+    display: 'flex'
+
   },
   description: {
     color: "gray",
   },
-
+  menuImage: {
+    height: 200,
+    width: 200,
+  },
+  rating: {
+    color: "gray",
+  },
   ratingText: {
     color: "white",
   },
   ratingContainer: {
     backgroundColor: "rgba(0,0,0,0.3)",
-    width:"100%",
-    paddingLeft:8,
-    position:'absolute',
-    bottom:0,
-    left:0,
+    width: "100%",
+    paddingLeft: 8,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
   },
   openingHours: {
-    color: "gray",
+    color: "white",
+    paddingVertical: 4,
+    fontSize: 16
   },
   iconContainer: {
     height: 200,
@@ -327,5 +446,77 @@ const styles = StyleSheet.create({
     display: "flex",
     borderRadius: 80,
   },
+  icon: {
+    width: 24,
+    height: 24,
+    marginTop: 8,
+    marginLeft: -8,
+
+  },
+
+  selectValue: {
+    color: "#6f7482",
+    fontSize: 16,
+    fontFamily: "IBMPlexSans-Regular",
+  },
+  selectLayout: {
+    height: 68,
+    width: 318,
+    left: 44,
+    position: "absolute",
+  },
+  confirmFlexBox: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  textInput: {
+    top: 35,
+  },
+  textInput1: {
+    top: 131,
+    height: 73,
+    width: 318,
+    left: 44,
+    position: "absolute",
+  },
+  select: {
+    top: 231,
+    overflow: "hidden",
+  },
+  confirm: {
+    fontSize: FontSize.paragraphIBMPlexSansRegular_size,
+    letterSpacing: -0.2,
+    lineHeight: 24,
+    fontWeight: "700",
+    fontFamily: FontFamily.interBold,
+    color: Colors.DEFAULT_WHITE,
+    textAlign: "center",
+    display: "flex",
+    width: 87,
+  },
+  confirmWrapper: {
+    top: 340,
+    left: 139,
+    borderRadius: Border.br_base,
+    backgroundColor: Color.colorRed,
+    width: 123,
+    height: 55,
+    flexDirection: "row",
+    paddingHorizontal: Padding.p_119xl,
+    paddingVertical: Padding.p_base,
+    position: "absolute",
+    alignItems: "center",
+  },
+  framePop: {
+    backgroundColor: "#131313",
+    width: 402,
+    height: 423,
+    overflow: "hidden",
+  },
+
+
+
+
 
 });
+
