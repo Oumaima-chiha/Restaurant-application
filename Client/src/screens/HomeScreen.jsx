@@ -12,18 +12,13 @@ import { AntDesign } from "@expo/vector-icons";
 import RestaurantCard from "../Component/RestaurantCard";
 import { useEffect } from "react";
 
-
-
-
 export default function HomeScreen({ navigation, route }) {
-
-const categories = ["Italian", "Tunisian", "Japanese", "Lebanese","Steakhouse","Breakfast","Mexican","French"];
+  const categories = ["Italian", "Tunisian", "Japanese", "Lebanese","Steakhouse","Breakfast","Mexican","French"];
 
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 
-
   const [restaurant, setRestaurant] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null)
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   const fetchData = async () => {
     try {
@@ -31,7 +26,6 @@ const categories = ["Italian", "Tunisian", "Japanese", "Lebanese","Steakhouse","
       if (response.ok) {
         const data = await response.json();
         setRestaurant(data);
-
       } else {
         console.error("Failed to fetch data");
       }
@@ -41,26 +35,13 @@ const categories = ["Italian", "Tunisian", "Japanese", "Lebanese","Steakhouse","
   };
 
   useEffect(() => {
-
-    fetchData()
-
-    console.log('aaaa')
-
-
-
-  }, [])
-
-
-
-
-
-
+    fetchData();
+  }, []);
 
   const handleButtonPress = (restaurant) => {
     navigation.navigate("RestaurantDetails", { restaurant });
-    console.log(restaurant)
+    console.log(restaurant);
   };
-
 
   return (
     <ScrollView
@@ -69,7 +50,8 @@ const categories = ["Italian", "Tunisian", "Japanese", "Lebanese","Steakhouse","
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.scrollViewFlex}
     >
-      <View>
+      {/* Wrap the top section in a View with a white background */}
+      <View style={styles.topSection}>
         <View>
           <Text style={styles.screenTitle}>
             Find the best{"\n"}restaurant near you.
@@ -91,42 +73,34 @@ const categories = ["Italian", "Tunisian", "Japanese", "Lebanese","Steakhouse","
           />
         </View>
       </View>
+
       <View>
-      <ScrollView
-    horizontal
-    showsHorizontalScrollIndicator={false}
-    contentContainerStyle={styles.CategoryScrollViewStyle}
-  >
-    {categories.map((category, index) => (
-      <TouchableOpacity
-        key={index}
-        style={styles.CategoryStyleView}
-        onPress={() => setSelectedCategory(category)}
-      >
-        <Text style={styles.CategoryText}>{category}</Text>
-      </TouchableOpacity>
-    ))}
-  </ScrollView>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.CategoryScrollViewStyle}
+        >
+          {categories.map((category, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.CategoryStyleView}
+              onPress={() => setSelectedCategory(category)}
+            >
+              <Text style={styles.CategoryText}>{category}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </View>
-<ScrollView vertical>
-  {restaurant
-    // .filter((restaurant) => {
-    //   if (categories === null) {
-    //     return true; 
-    //   }
-
-    //   return restaurant.category === categories;
-    // })
-    .map((rest) => (
-      <View key={rest.id}>
-        <RestaurantCard
-          restaurant={rest}
-          onPress={(restaurant) => handleButtonPress(restaurant)}
-        />
-      </View>
-    ))}
-</ScrollView>
-
+      <ScrollView vertical>
+        {restaurant.map((rest) => (
+          <View key={rest.id}>
+            <RestaurantCard
+              restaurant={rest}
+              onPress={(restaurant) => handleButtonPress(restaurant)}
+            />
+          </View>
+        ))}
+      </ScrollView>
     </ScrollView>
   );
 }
@@ -134,7 +108,11 @@ const categories = ["Italian", "Tunisian", "Japanese", "Lebanese","Steakhouse","
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:'black',
+    backgroundColor: 'black',
+  },
+  topSection: {
+    backgroundColor: 'white',
+    paddingBottom:2, // Adjust the height of the white section as needed
   },
   screenTitle: {
     fontSize: 25,
@@ -149,37 +127,38 @@ const styles = StyleSheet.create({
   InputContainer: {
     flexDirection: "row",
     margin: 30,
-    borderRadius: 10,
+    borderRadius: 20,
     backgroundColor: "white",
     alignItems: "center",
     top: 100,
     marginBottom: 110,
-    
   },
   search: {
     marginHorizontal: 10,
   },
-  scrollViewFlex: {
-
-  },
+  scrollViewFlex: {},
   CategoryScrollViewStyle: {
     paddingHorizontal: 10,
   },
   ActiveCategory: {
     flexDirection: "row",
     marginBottom: 20,
-    
   },
   CategoryText: {
     color: "black",
     margin: 10,
-    padding: 10,
-    backgroundColor: "white",
-    
+    padding: 3,
+    // Add border radius to make it round
+    textAlign: "center", // Center text horizontally
   },
   CategoryStyleView: {
     flex: 1,
-    display: "grid",
-  
+    overflow: "hidden", // Clip content to stay within rounded border
+    borderWidth: 1, // Add a border for better visibility
+    borderColor: "white", // Color of the border
+    marginHorizontal: 10,
+    backgroundColor: "white",
+    borderRadius: 20,
+    maxHeight: 40, // Add some spacing between categories
   },
 });

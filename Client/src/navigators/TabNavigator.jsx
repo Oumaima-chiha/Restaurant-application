@@ -30,7 +30,7 @@ const TabNavigator = () => {
 
             <Tab.Screen name="Home" component={Homescreen} options={{
                 tabBarIcon: ({ focused, color, size }) => (
-                    <AntDesign name="home" size={24} color={focused ? Colors.DEFAULT_RED : Colors.DEFAULT_WHITE} />
+                    <AntDesign name="home" size={24} color={focused ? Colors.DEFAULT_RED : "black"} />
                 ),
 
             }}></Tab.Screen>
@@ -39,7 +39,7 @@ const TabNavigator = () => {
 
                 options={{
                     tabBarIcon: ({ focused, color, size }) => (
-                        <AntDesign name="calendar" size={24} color={focused ? Colors.DEFAULT_RED : Colors.DEFAULT_WHITE} />
+                        <AntDesign name="calendar" size={24} color={focused ? Colors.DEFAULT_RED : "black"} />
                     ),
 
 
@@ -47,13 +47,13 @@ const TabNavigator = () => {
             <Tab.Screen name="Messages" component={MessagesScreen} options={{
 
                 tabBarIcon: ({ focused, color, size }) => (
-                    <AntDesign name="message1" size={24} color={focused ? Colors.DEFAULT_RED : Colors.DEFAULT_WHITE} />
+                    <AntDesign name="message1" size={24} color={focused ? Colors.DEFAULT_RED : "black"} />
                 )
             }}></Tab.Screen>
             <Tab.Screen name={"LoginScreen"} component={LoginScreen} options={{
 
                 tabBarIcon: ({ focused, color, size }) => (
-                    <AntDesign name="login" size={24} color={focused ? Colors.DEFAULT_RED : Colors.DEFAULT_WHITE} />
+                    <AntDesign name="login" size={24} color={focused ? Colors.DEFAULT_RED : "black"} />
 
                 )
             }} ></Tab.Screen>
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     tabBarStyle: {
         height: 70,
         position: 'absolute',
-       backgroundColor: "black",
+       backgroundColor: "white",
        borderTopWidth: 1,
        borderTopColor: Colors.DEFAULT_RED
         // elevation: 0,
