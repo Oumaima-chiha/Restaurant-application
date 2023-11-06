@@ -1,4 +1,3 @@
-import React from "react";
 import {
   SafeAreaView,
   View,
@@ -7,30 +6,47 @@ import {
   StyleSheet,
   Button,
   TextInput,
-  TouchableOpacity,
   Dimensions,
   Modal,
   Pressable,
+  ScrollView,
+  TouchableOpacity
 } from "react-native";
-import { Display } from "../utils";
 import { useNavigation } from "@react-navigation/native";
 import DateTimePicker from '@react-native-community/datetimepicker';
-import DropDownPicker from "react-native-dropdown-picker";
-import { useState } from "react";
-import { Colors } from '../contants';
+import React, { useState, useRef } from "react";
+import { Colors, Images } from '../contants';
 import { FontSize, FontFamily, Color, Border, Padding } from "../../GlobalStyles";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
+import store from '../features/store'
+import axios from "axios";
+import ToastMessage from "../Component/ToastMessage";
+import moment from 'moment'
+import { AntDesign } from '@expo/vector-icons';
+
+
+
+
 
 
 export default function RestaurantDetails({ route }) {
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+
+
+  const customer = store.getState().customer
 
   const [showForm, setShowForm] = useState(false)
-  const [reservation, setReservation] = useState({ date: new Date(Date.now()), time: '', guest_number: 0 })
+  const [reservation, setReservation] = useState({ date: '', time: '', guest_number: null })
   const [mode, setMode] = useState('date')
   const [showDateTime, setShowDateTime] = useState(false)
+  const [showToast, setShowToast] = useState(false);
+  const [showToast2, setShowToast2] = useState(false);
+  const [spotsRemaining, setSpotsRemaining] = useState('')
+  const toastRef = useRef(null);
 
 
   const {
+    id,
     name,
     main_image,
     rating,
@@ -38,6 +54,8 @@ export default function RestaurantDetails({ route }) {
     menu_images,
     opening_time,
     closing_time,
+    City,
+    category
   } = route.params.restaurant;
 
 
@@ -49,17 +67,73 @@ export default function RestaurantDetails({ route }) {
   }
 
 
+  const makeReservation = async () => {
+
+    try {
+      const myReservation = await axios.post(`http://${apiUrl}:3000/api/reservations/${customer.id}/${id}`, reservation)
+      console.log("Your reservation request was sent!", myReservation)
+      setSpotsRemaining(`Your reservation request was sent!`)
+      setShowToast2(true);
+      if (toastRef.current) {
+        toastRef.current.show();
+      }
+
+      setReservation({ date: '', time: '', guest_number: null })
+      toggleForm()
+    } catch (error) {
+      console.log("Couldn't send reservation request :(", error)
+      if (error.response.status === 400) {
+        if (error.response.data > 1) {
+          setSpotsRemaining(`This date only has ${error.response.data} reservation spots remaining`)
+        }
+        else if (error.response.data === 1) {
+          setSpotsRemaining(`This date only has ${error.response.data} reservation spot remaining`)
+        }
+        else if (error.response.data === 0) {
+          setSpotsRemaining(`This date has no reservation spots remaning`)
+        }
+
+        setShowToast(true);
+        if (toastRef.current) {
+          toastRef.current.show();
+        }
+      }
+      if (error.response.status === 422) {
+        setSpotsRemaining('Reservation info missing')
+        setShowToast(true);
+        if (toastRef.current) {
+          toastRef.current.show();
+        }
+      }
+      if (error.response.status === 404) {
+        setSpotsRemaining('You need to be logged in')
+        setShowToast(true);
+        if (toastRef.current) {
+          toastRef.current.show();
+        }
+      }
+    }
+
+  }
+
+
   const handleDateChange = (event, selectedDate) => {
-    const currentDate = selectedDate || new Date()
-    setReservation((inputs) => ({ ...inputs, [mode]: currentDate }))
+    let currentDate = selectedDate || ''
+
+    if (mode === 'date') {
+
+      currentDate = currentDate.toISOString().slice(0, 10)
+    }
+
 
     if (event.type === 'set') {
-
-      console.log('Selected date:', new Date(currentDate));
+      console.log('Selected date:', (currentDate));
+      setReservation((inputs) => ({ ...inputs, [mode]: currentDate }))
       hideDateTime()
 
     }
-    hideDateTime()
+
+    else hideDateTime()
 
   }
 
@@ -81,120 +155,143 @@ export default function RestaurantDetails({ route }) {
 
     setMode(mode)
     setShowDateTime(true)
-
   }
 
+  const spaced = category.toString().split(',').join('  ')
+
   return (
-    <SafeAreaView>
-      <View style={styles.header}>
+
+    <View style={styles.ScreenContainer}>
+
+      <View>
+
+        <Image source={{ uri: main_image.trim() }} style={styles.image} />
+
+        <View style={styles.ratingContainer}>
+
+
+          <Text style={styles.ratingText}>{`Rating: ${'4.0'}`}</Text>
+
+        </View>
+
+      </View>
+      <TouchableOpacity title="Go Back" style={styles.backButton} onPress={() => navigation.goBack()} >
+        <Text style={styles.backText}>
+          <AntDesign name="left" size={24} color="white " />
+        </Text>
+      </TouchableOpacity>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.ScrollViewFlex}>
         <View
           style={{
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
+
           }}
         >
-          <Image source={{ uri: main_image }} style={styles.image} />
-        </View>
-
-<<<<<<< HEAD
-            <View style={{ backgroundColor: "#ffffff", margin: 50, padding: 40, borderRadius: 10, top: 250, height: 250 }}
-            >
-
-              <Text style={{ fontSize: 25 }}>Date</Text>
-              <DateTimePicker
-                mode="date"
-                value={new Date()}
-                placeholder="select date"
-
-                onChange={handleChange}
-              />
-              <Text style={{ fontSize: 25 }}>Time</Text>
-              <DateTimePicker
-                value={new Date()}
-                mode="time"
-                placeholder="select time"
-                onChange={handleChange}
-              />
-              <Text style={{ fontSize: 25 }}>Guests</Text>
-              <TextInput
-                name="guest_number"
-                keyboardType="number"
-                onChange={handleChange}
-              />
-
-
-            </View>
-
+          <Text style={styles.name}>{name}</Text>
+          <TouchableOpacity style={styles.menuButton} onPress={() => navigation.navigate("MenuContainer", {
+            menuImages: menu_images
+          })} ><Text style={styles.menuText}>
+              Menu
+            </Text>
           </TouchableOpacity>
 
 
-        </Modal>}
-=======
->>>>>>> c59cdc5bd703085c868830da7358b13f9e6ff5f2
+        </View>
 
-        <View style={styles.iconContainer}>
-          <Text style={styles.name}>{name}</Text>
-          <Text style={styles.category}></Text>
-          <Button title="Menu" onPress={() => navigation.navigate("")} >
-            <Text style={styles.InfoTitle}>{description}</Text>
-            {menu_images.map((menuImage, index) => (
-              <Image
-                key={index}
-                source={{ uri: menuImage }}
-                style={styles.menuImage}
-              />
-            ))}
-          </Button>
-          <Text style={styles.rating}>{`Rating: ${rating}`}</Text>
+        {showToast2 && (
+          <ToastMessage
+            ref={toastRef}
+            type="success"
+            text={spotsRemaining}
+            timeout={3000}
+          />
+        )}
+        <Text
+          style={styles.openingHours}
+        >{` ${moment(opening_time).format('LT')} - ${moment(closing_time).format('LT')}`}</Text>
+        <View style={styles.categoryContainer}>
+          <Text style={styles.category}>{spaced}</Text>
+        </View>
+        <View style={{
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 5
+
+        }}>
+          <Image source={Images.PINICON} style={styles.icon} />
           <Text
             style={styles.openingHours}
-          >{`Opening Hours: ${opening_time} - ${closing_time}`}</Text>
-          <Button title="Go Back" onPress={() => navigation.goBack()} />
-          <Button title="Make A reservation " onPress={toggleForm} />
-          {showForm && <Modal transparent={true} visible={true} >
+          >{City}</Text>
 
-            <TouchableOpacity style={{ backgroundColor: '#000000aa', flex: 1 }} onPress={toggleForm}>
-
-              <View style={{ backgroundColor: Colors.DARK_ONE, margin: 20, padding: 40, borderRadius: 10, top: 250, height: 350, justifyContent: "space-between" }}
-              >
-                <KeyboardAwareScrollView>
-
-                  <Pressable style={styles.btn} onPress={() => { toggleDateTime("date") }} ><Text style={styles.btnText}>Date</Text></Pressable>
-                  <Pressable style={styles.btn} onPress={() => { toggleDateTime("time") }}><Text style={styles.btnText}>Time</Text></Pressable>
-
-                  {showDateTime && <DateTimePicker
-                    mode={mode}
-                    value={new Date()}
-                    is24Hour={true}
-                    confirmBtnText="Confirm"
-                    display="default"
-                    timeZoneName={'Africa/Tunis'}
-                    onChange={handleDateChange}
-                  />}
-                  <Text style={{ fontSize: 25, color: "#ffffff" }}>Guests</Text>
-                  <TextInput
-                    keyboardType="numeric"
-                    onChangeText={(text) => handleChange('guest_number', text)}
-                    style={styles.inputControlGuest}
-
-                  />
-                </KeyboardAwareScrollView>
-
-                <Pressable style={styles.btn} onPress={() => {
-                  console.log(reservation.date.toISOString().slice(0, 10), new Date(reservation.time), reservation.guest_number)
-                }} ><Text style={styles.btnText}>Submit</Text></Pressable>
-
-
-              </View>
-            </TouchableOpacity>
-
-
-
-          </Modal>}
         </View>
-      </View>
-    </SafeAreaView>
+        <Text style={styles.description}>{description}</Text>
+        <View style={styles.reservationContainer}>
+          <TouchableOpacity title="Make A reservation " style={styles.menuButton} onPress={toggleForm} >
+            <Text style={styles.menuText}>
+              Make a Reservation
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {showForm && <Modal transparent={true} visible={true} onPress={toggleForm} >
+
+
+          <Pressable style={{ backgroundColor: '#000000aa', flex: 1 }} onPress={toggleForm}>
+
+            {showToast && (
+              <ToastMessage
+                ref={toastRef}
+                type="danger"
+                text={spotsRemaining}
+                timeout={3000}
+              />
+            )}
+
+
+
+            <View style={{ backgroundColor: Colors.DARK_ONE, margin: 20, padding: 40, borderRadius: 10, top: 250, height: 350, justifyContent: "space-between" }}
+            >
+              <KeyboardAwareScrollView>
+
+                <Pressable style={styles.btn} onPress={() => { toggleDateTime("date") }} ><Text style={styles.btnText}>Date</Text></Pressable>
+                <Pressable style={styles.btn} onPress={() => { toggleDateTime("time") }}><Text style={styles.btnText}>Time</Text></Pressable>
+
+                {showDateTime && <DateTimePicker
+                  mode={mode}
+                  value={new Date(Date.now())}
+                  is24Hour={true}
+                  confirmBtnText="Confirm"
+                  display="default"
+                  minimumDate={new Date()}
+                  timeZoneName={'Africa/Tunis'}
+                  timeZoneOffsetInMinutes={0}
+                  onChange={handleDateChange}
+                />}
+                <Text style={{ fontSize: 25, color: "#ffffff" }}>Guests</Text>
+                <TextInput
+                  keyboardType="numeric"
+                  onChangeText={(text) => handleChange('guest_number', +text)}
+                  style={styles.inputControlGuest}
+
+                />
+              </KeyboardAwareScrollView>
+
+              <Pressable style={styles.btn} onPress={makeReservation} ><Text style={styles.btnText}>Submit</Text></Pressable>
+
+
+            </View>
+          </Pressable>
+
+
+
+        </Modal>}
+
+      </ScrollView>
+    </View>
   );
 }
 
@@ -206,6 +303,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     display: "flex",
   },
+  reservationContainer: {
+    alignItems: "center",
+    marginTop: 40,
+
+  },
   inputControl: {
     height: 25,
     backgroundColor: Colors.DEFAULT_WHITE,
@@ -216,6 +318,39 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: Colors.DEFAULT_WHITE,
   },
+  menuButton: {
+    borderRadius: 16,
+    backgroundColor: "#F00",
+    paddingVertical: 8,
+    paddingHorizontal: 24,
+
+  },
+  backButton: {
+    borderRadius: 16,
+    backgroundColor: "#F00",
+    paddingVertical: -15,
+    paddingHorizontal: 12,
+    width: 50,
+    height: 50,
+    top: -430,
+    left: 10
+
+  },
+  backText: {
+    top: 15,
+    color: "#FFF",
+
+
+  },
+  menuText: {
+    color: "#FFF",
+    textAlign: "center",
+    fontFamily: "Inter",
+    fontSize: 16,
+    fontStyle: "normal",
+    fontWeight: "700",
+    lineHeight: 24,
+  },
   inputControlGuest: {
     height: 25,
     backgroundColor: Colors.DEFAULT_WHITE,
@@ -225,6 +360,11 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '500',
     color: Colors.DARK_ONE,
+  },
+  ScrollViewFlex: {
+    paddingHorizontal: 20,
+    paddingTop: 10,
+
   },
 
   btn: {
@@ -243,33 +383,64 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#fff',
   },
+  ScreenContainer: {
+    flex: 1,
+    backgroundColor: "black"
+
+  },
 
   image: {
     width: Dimensions.get("window").width,
-    height: 250,
+    height: 480,
   },
   name: {
 
-    color: Colors.DEFAULT_WHITE,
-    fontWeight: "bold",
-    alignItems: "center",
-    justifyContent: "center",
+    fontFamily: "Fakt Pro",
+    fontSize: 32,
+    fontWeight: "500",
+    lineHeight: 40,
+    color: "white",
   },
   category: {
-    color: "gray",
+    color: "black",
+    paddingVertical: 6,
+    fontSize: 14,
+    display: 'flex'
+  },
+  categoryContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    width: 150,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 8,
+    display: 'flex'
+
   },
   description: {
     color: "gray",
   },
   menuImage: {
-    height: 100,
-    width: "80%",
+    height: 200,
+    width: 200,
   },
   rating: {
     color: "gray",
   },
+  ratingText: {
+    color: "white",
+  },
+  ratingContainer: {
+    backgroundColor: "rgba(0,0,0,0.3)",
+    width: "100%",
+    paddingLeft: 8,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+  },
   openingHours: {
-    color: "gray",
+    color: "white",
+    paddingVertical: 4,
+    fontSize: 16
   },
   iconContainer: {
     height: 200,
@@ -279,30 +450,14 @@ const styles = StyleSheet.create({
     display: "flex",
     borderRadius: 80,
   },
-  // textInputDatePickerPlaceHolder: {
-  //   fontFamily: "IBMPlexSans-Regular",
-  //   color: "#6f7482",
-  //   fontSize: 16,
-  // },
-  // textInputDatePickerValue: {
-  //   position: "absolute",
-  //   left: 44,
-  //   top: 35,
-  //   width: 318,
-  //   height: 68,
-  // },
-  // textInputDatePicker1PlaceHolder: {
-  //   fontFamily: "IBMPlexSans-Regular",
-  //   color: "#6f7482",
-  //   fontSize: 16,
-  // },
-  // textInputDatePicker1Value: {
-  //   position: "absolute",
-  //   left: 44,
-  //   top: 131,
-  //   width: 318,
-  //   height: 73,
-  // },
+  icon: {
+    width: 24,
+    height: 24,
+    marginTop: 8,
+    marginLeft: -8,
+
+  },
+
   selectValue: {
     color: "#6f7482",
     fontSize: 16,
@@ -363,7 +518,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
 
-  // modal:
+
 
 
 

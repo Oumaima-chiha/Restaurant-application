@@ -1,5 +1,7 @@
 import { Colors } from "../contants";
 import axios from "axios";
+import { useDispatch } from 'react-redux';
+import { setId, setFullname, setEmail } from '../../src/features/customerSlice';
 import React, { useState, useRef } from "react";
 import {
   StyleSheet,
@@ -12,6 +14,12 @@ import {
 import ToastMessage from "../Component/ToastMessage";
 
 export default function LoginScreen({ navigation }) {
+
+  const dispatch = useDispatch();
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+
+
+
 
   const [inputs, setInputs] = useState({ email: '', password: '' });
   const [showToast, setShowToast] = useState(false);
@@ -40,14 +48,20 @@ export default function LoginScreen({ navigation }) {
     if (validator()) {
       try {
 
-        const { data } = await axios.post('http://192.168.1.183:3000/api/customers/signin', inputs);
-        console.log('Customer logged in successfully', data);
+        const { data } = await axios.post(`http://${apiUrl}:3000/api/customers/signin`, inputs);
+        dispatch(setId(data.customer.id));
+        dispatch(setFullname(data.customer.fullname));
+        dispatch(setEmail(data.customer.email));
+
+
+        console.log('Customer logged successfully');
 
         setShowToast1(true);
         if (toastRef.current) {
           toastRef.current.show();
-        }      
-
+        }
+        navigation.navigate('Home');
+      
       } catch (error) {
         setShowToast(true);
         if (toastRef.current) {
@@ -59,28 +73,32 @@ export default function LoginScreen({ navigation }) {
   };
 
   return (
+
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.DEFAULT_BLACK }}>
-               {showToast && (
-              <ToastMessage
-                ref={toastRef}
-                type="danger"
-                text="Wrong information"
-                timeout={3000}
-              />
-            )}
-               {showToast1 && (
-              <ToastMessage
-                ref={toastRef}
-                type="success"
-                text="logged in successfully"
-                timeout={3000}
-              />
-            )}
+      {showToast && (
+        <ToastMessage
+          ref={toastRef}
+          type="danger"
+          text="Wrong information"
+          timeout={3000}
+        />
+      )}
+
+      {showToast1 && (
+        <ToastMessage
+          ref={toastRef}
+          type="success"
+          text="logged in successfully"
+          timeout={3000}
+        />
+      )}
       <View style={styles.container}>
+
         <View style={styles.header}>
           <Text style={styles.title}>
             Sign in to <Text style={{ color: Colors.DEFAULT_RED }}>MyApp</Text>
           </Text>
+
           <Text style={styles.subtitle}>
             Login so you can make a reservation.
           </Text>
@@ -129,7 +147,7 @@ export default function LoginScreen({ navigation }) {
       </View>
 
     </SafeAreaView>
- );
+  );
 }
 
 const styles = StyleSheet.create({

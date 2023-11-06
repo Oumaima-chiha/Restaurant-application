@@ -10,7 +10,11 @@ import RestaurantDetails from "./RestaurantDetails";
 import ForgetPasswordEmail from "./ForgetPasswordEmail";
 import VerificationCodeScreen from "./VerificationCodeScreen";
 import NewPasswordScreen from "./NewPasswordScreen.jsx";
-import RegisterScreen from "./RegisterScreen.jsx"
+import RegisterScreen from "./RegisterScreen.jsx";
+import MenuContainer from "./MenuContainer";
+import Upcoming from './Upcoming.jsx'
+import History from './History.jsx'
+
 
 
 
@@ -28,4 +32,7 @@ export {
   VerificationCodeScreen,
   NewPasswordScreen,
   RegisterScreen,
+  Upcoming,
+  History,
+  MenuContainer
 };
