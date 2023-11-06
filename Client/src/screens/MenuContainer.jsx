@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, FlatList, Image, Pressable ,Text} from "react-native";
+import { View, StyleSheet, FlatList, Image, Pressable } from "react-native";
 
 const MenuContainer = ({ route, navigation }) => {
   const data = route.params.menuImages;
@@ -14,11 +14,11 @@ const MenuContainer = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
         <Pressable style={StyleSheet.absoluteFill} onPress={()=>navigation.goBack()}/>
-      <View style={styles.innerContainer}>
-        <FlatList
+        <View style={styles.innerContainer}>
+         <FlatList
           data={data}
           renderItem={renderItem}
-        horizontal={true}
+          horizontal={true}
           showsHorizontalScrollIndicator={false}
         />
       </View>

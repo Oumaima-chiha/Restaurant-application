@@ -164,12 +164,12 @@ const styles = StyleSheet.create({
   },
   menuText:{
     color: "#FFF",
-textAlign: "center",
-fontFamily: "Inter",
-fontSize: 16,
-fontStyle: "normal",
-fontWeight: "700",
-lineHeight: 24,
+    textAlign: "center",
+    fontFamily: "Inter",
+    fontSize: 16,
+    fontStyle: "normal",
+    fontWeight: "700",
+    lineHeight: 24,
   },
   reservationContainer:{
     alignItems:"center",
