@@ -520,6 +520,3 @@ const styles = StyleSheet.create({
 
 });
 
-
-
-
