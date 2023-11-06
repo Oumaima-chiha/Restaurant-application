@@ -48,7 +48,7 @@ const RegisterScreen = ({ navigation }) => {
   const handleSubmit = async () => {
     if (validator()) {
       try {
-        const { data } = await axios.post('http://192.168.1.183:3000/api/customers/', inputs);
+        const { data } = await axios.post(`http://${process.env.REACT_APP_API_URL}:3000/api/customers/`, inputs);
         console.log('User added successfully', data);
         setShowToast2(true);
         if (toastRef.current) {

@@ -37,13 +37,14 @@ export default function LoginScreen({ navigation }) {
   const handleSubmit = async () => {
     if (validator()) {
       try {
-        const { data } = await axios.post('http://192.168.1.183:3000/api/customers/signin', inputs);
+        const { data } = await axios.post(`http://${process.env.REACT_APP_API_URL}:3000/api/customers/signin`, inputs);
         console.log('Customer logged in successfully', data);
 
         setShowToast1(true);
         if (toastRef.current) {
           toastRef.current.show();
         }
+        navigation.navigate('Home');
       
       } catch (error) {
         setShowToast(true);
