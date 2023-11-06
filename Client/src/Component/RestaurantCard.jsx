@@ -7,7 +7,6 @@ export default function RestaurantCard({ restaurant, onPress }) {
   const { name, main_image, category, rating, status, City } = restaurant;
   const handleButtonPress = () => {
     onPress(restaurant)
-    console.log(restaurant)
   };
 
   const spaced = category.toString().split(',').join('  ')
