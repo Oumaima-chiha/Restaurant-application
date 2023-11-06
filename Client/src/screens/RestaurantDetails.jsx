@@ -164,9 +164,20 @@ export default function RestaurantDetails({ route }) {
 
     <View style={styles.ScreenContainer}>
 
+
+
       <View>
 
+
         <Image source={{ uri: main_image.trim() }} style={styles.image} />
+        {showToast2 && (
+          <ToastMessage
+            ref={toastRef}
+            type="success"
+            text={spotsRemaining}
+            timeout={3000}
+          />
+        )}
 
         <View style={styles.ratingContainer}>
 
@@ -203,14 +214,7 @@ export default function RestaurantDetails({ route }) {
 
         </View>
 
-        {showToast2 && (
-          <ToastMessage
-            ref={toastRef}
-            type="success"
-            text={spotsRemaining}
-            timeout={3000}
-          />
-        )}
+
         <Text
           style={styles.openingHours}
         >{` ${moment(opening_time).format('LT')} - ${moment(closing_time).format('LT')}`}</Text>
@@ -223,6 +227,7 @@ export default function RestaurantDetails({ route }) {
           gap: 5
 
         }}>
+
           <Image source={Images.PINICON} style={styles.icon} />
           <Text
             style={styles.openingHours}
@@ -238,62 +243,63 @@ export default function RestaurantDetails({ route }) {
           </TouchableOpacity>
         </View>
 
-        {isModalOpen  &&
-        <TouchableWithoutFeedback onPress={toggleForm}>
-        
-        <Modal transparent={true} visible={true} onPress={toggleForm} >
+        {isModalOpen &&
+          <TouchableWithoutFeedback onPress={toggleForm}>
+
+            <Modal transparent={true} visible={true} onPress={toggleForm} >
 
 
-          <Pressable style={{ backgroundColor: '#000000aa', flex: 1 }} onPress={toggleForm}>
+              <Pressable style={{ backgroundColor: '#000000aa', flex: 1 }} onPress={toggleForm}>
 
-            {showToast && (
-              <ToastMessage
-                ref={toastRef}
-                type="danger"
-                text={spotsRemaining}
-                timeout={3000}
-              />
-            )}
-
-
-
-            <View style={{ backgroundColor: Colors.DARK_ONE, margin: 20, padding: 40, borderRadius: 10, top: 250, height: 350, justifyContent: "space-between" }}
-            >
-    
-
-                <Pressable style={styles.btn} onPress={() => { toggleDateTime("date") }} ><Text style={styles.btnText}>Date</Text></Pressable>
-                <Pressable style={styles.btn} onPress={() => { toggleDateTime("time") }}><Text style={styles.btnText}>Time</Text></Pressable>
-
-                {showDateTime && <DateTimePicker
-                  mode={mode}
-                  value={new Date(Date.now())}
-                  is24Hour={true}
-                  confirmBtnText="Confirm"
-                  display="default"
-                  minimumDate={new Date()}
-                  timeZoneName={'Africa/Tunis'}
-                  timeZoneOffsetInMinutes={0}
-                  onChange={handleDateChange}
-                />}
-                <Text style={{ fontSize: 25, color: "#ffffff" }}>Guests</Text>
-                <TextInput
-                  keyboardType="numeric"
-                  onChangeText={(text) => handleChange('guest_number', +text)}
-                  style={styles.inputControlGuest}
-
-                />
-              
-
-              <Pressable style={styles.btn} onPress={makeReservation} ><Text style={styles.btnText}>Submit</Text></Pressable>
-
-
-            </View>
-          </Pressable>
+                {showToast && (
+                  <ToastMessage
+                    ref={toastRef}
+                    type="danger"
+                    text={spotsRemaining}
+                    timeout={3000}
+                  />
+                )}
 
 
 
-        </Modal>
-        </TouchableWithoutFeedback>
+
+                <View style={{ backgroundColor: Colors.DARK_ONE, margin: 20, padding: 40, borderRadius: 10, top: 250, height: 350, justifyContent: "space-between" }}
+                >
+
+
+                  <Pressable style={styles.btn} onPress={() => { toggleDateTime("date") }} ><Text style={styles.btnText}>Date</Text></Pressable>
+                  <Pressable style={styles.btn} onPress={() => { toggleDateTime("time") }}><Text style={styles.btnText}>Time</Text></Pressable>
+
+                  {showDateTime && <DateTimePicker
+                    mode={mode}
+                    value={new Date(Date.now())}
+                    is24Hour={true}
+                    confirmBtnText="Confirm"
+                    display="default"
+                    minimumDate={new Date()}
+                    timeZoneName={'Africa/Tunis'}
+                    timeZoneOffsetInMinutes={0}
+                    onChange={handleDateChange}
+                  />}
+                  <Text style={{ fontSize: 25, color: "#ffffff" }}>Guests</Text>
+                  <TextInput
+                    keyboardType="numeric"
+                    onChangeText={(text) => handleChange('guest_number', +text)}
+                    style={styles.inputControlGuest}
+
+                  />
+
+
+                  <Pressable style={styles.btn} onPress={makeReservation} ><Text style={styles.btnText}>Submit</Text></Pressable>
+
+
+                </View>
+              </Pressable>
+
+
+
+            </Modal>
+          </TouchableWithoutFeedback>
         }
 
       </ScrollView>

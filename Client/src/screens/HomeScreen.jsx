@@ -11,11 +11,13 @@ import { Colors } from "../contants";
 import { AntDesign } from "@expo/vector-icons";
 import RestaurantCard from "../Component/RestaurantCard";
 import { useEffect } from "react";
+import { useIsFocused } from '@react-navigation/native';
 
 export default function HomeScreen({ navigation, route }) {
-  const categories = ["Italian", "Tunisian", "Japanese", "Lebanese","Steakhouse","Breakfast","Mexican","French"];
+  const categories = ["Italian", "Tunisian", "Japanese", "Lebanese", "Steakhouse", "Breakfast", "Mexican", "French"];
 
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+  const isFocused = useIsFocused();
 
   const [restaurant, setRestaurant] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -35,8 +37,22 @@ export default function HomeScreen({ navigation, route }) {
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+
+    if (isFocused) {
+      fetchData()
+
+
+    }
+
+
+
+  }, [isFocused])
+
+
+
+
+
+
 
   const handleButtonPress = (restaurant) => {
     navigation.navigate("RestaurantDetails", { restaurant });
@@ -112,7 +128,7 @@ const styles = StyleSheet.create({
   },
   topSection: {
     backgroundColor: 'white',
-    paddingBottom:2, // Adjust the height of the white section as needed
+    paddingBottom: 2, // Adjust the height of the white section as needed
   },
   screenTitle: {
     fontSize: 25,
