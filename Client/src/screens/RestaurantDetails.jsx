@@ -168,15 +168,18 @@ export default function RestaurantDetails({ route }) {
         <Image source={{ uri: main_image.trim() }} style={styles.image} />
 
         <View style={styles.ratingContainer}>
-          <TouchableOpacity title="Go Back" style={styles.backButton} onPress={() => navigation.goBack()} >
-            <Text style={styles.backText}>
-              <AntDesign name="left" size={24} color="white " />
-            </Text>
-          </TouchableOpacity>
+
 
           <Text style={styles.ratingText}>{`Rating: ${'4.0'}`}</Text>
+
         </View>
+
       </View>
+      <TouchableOpacity title="Go Back" style={styles.backButton} onPress={() => navigation.goBack()} >
+        <Text style={styles.backText}>
+          <AntDesign name="left" size={24} color="white " />
+        </Text>
+      </TouchableOpacity>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.ScrollViewFlex}>
@@ -329,7 +332,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     width: 50,
     height: 50,
-    top: -370
+    top: -430,
+    left: 10
 
   },
   backText: {
@@ -519,4 +523,7 @@ const styles = StyleSheet.create({
 
 
 });
+
+
+
 
