@@ -23,6 +23,8 @@ import axios from "axios";
 import ToastMessage from "../Component/ToastMessage";
 import moment from 'moment'
 import { AntDesign } from '@expo/vector-icons';
+import { TouchableWithoutFeedback } from "react-native";
+import { Display } from "../utils";
 
 
 
@@ -42,6 +44,7 @@ export default function RestaurantDetails({ route }) {
   const [showToast, setShowToast] = useState(false);
   const [showToast2, setShowToast2] = useState(false);
   const [spotsRemaining, setSpotsRemaining] = useState('')
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const toastRef = useRef(null);
 
 
@@ -146,10 +149,8 @@ export default function RestaurantDetails({ route }) {
   }
 
   const toggleForm = () => {
-
-    setShowForm(!showForm)
-  }
-
+    setIsModalOpen(!isModalOpen);
+  };
 
   const toggleDateTime = (mode) => {
 
@@ -237,7 +238,10 @@ export default function RestaurantDetails({ route }) {
           </TouchableOpacity>
         </View>
 
-        {showForm && <Modal transparent={true} visible={true} onPress={toggleForm} >
+        {isModalOpen  &&
+        <TouchableWithoutFeedback onPress={toggleForm}>
+        
+        <Modal transparent={true} visible={true} onPress={toggleForm} >
 
 
           <Pressable style={{ backgroundColor: '#000000aa', flex: 1 }} onPress={toggleForm}>
@@ -255,7 +259,7 @@ export default function RestaurantDetails({ route }) {
 
             <View style={{ backgroundColor: Colors.DARK_ONE, margin: 20, padding: 40, borderRadius: 10, top: 250, height: 350, justifyContent: "space-between" }}
             >
-              <KeyboardAwareScrollView>
+    
 
                 <Pressable style={styles.btn} onPress={() => { toggleDateTime("date") }} ><Text style={styles.btnText}>Date</Text></Pressable>
                 <Pressable style={styles.btn} onPress={() => { toggleDateTime("time") }}><Text style={styles.btnText}>Time</Text></Pressable>
@@ -278,7 +282,7 @@ export default function RestaurantDetails({ route }) {
                   style={styles.inputControlGuest}
 
                 />
-              </KeyboardAwareScrollView>
+              
 
               <Pressable style={styles.btn} onPress={makeReservation} ><Text style={styles.btnText}>Submit</Text></Pressable>
 
@@ -288,7 +292,9 @@ export default function RestaurantDetails({ route }) {
 
 
 
-        </Modal>}
+        </Modal>
+        </TouchableWithoutFeedback>
+        }
 
       </ScrollView>
     </View>
@@ -390,8 +396,8 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    width: Dimensions.get("window").width,
-    height: 480,
+    height: Display.setHeight(30),
+    width: Display.setWidth(88),
   },
   name: {
 
