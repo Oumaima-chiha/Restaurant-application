@@ -1,14 +1,16 @@
 import {
-  SafeAreaView,
   View,
   Text,
   Image,
   StyleSheet,
-  Button,
+ ScrollView,
+  TouchableOpacity,
   TextInput,
   Dimensions,
   Modal,
   Pressable,
+
+  
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -19,11 +21,12 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
 import store from '../features/store'
 import axios from "axios";
 import ToastMessage from "../Component/ToastMessage";
-import moment from 'moment'
 
 
 
 
+
+import moment from "moment" ;
 
 export default function RestaurantDetails({ route }) {
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
@@ -50,6 +53,8 @@ export default function RestaurantDetails({ route }) {
     menu_images,
     opening_time,
     closing_time,
+    City,
+    category
   } = route.params.restaurant;
 
 
@@ -150,7 +155,7 @@ export default function RestaurantDetails({ route }) {
     setMode(mode)
     setShowDateTime(true)
   }
-
+}
   return (
     <SafeAreaView>
 
@@ -168,9 +173,18 @@ export default function RestaurantDetails({ route }) {
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
+            
           }}
         >
-          <Image source={{ uri: main_image }} style={styles.image} />
+    <Text style={styles.name}>{name}</Text>
+    <TouchableOpacity  style={styles.menuButton} onPress={() => navigation.navigate("MenuContainer",{
+          menuImages:menu_images
+        })} ><Text style={styles.menuText}>
+      Menu
+    </Text>
+      </TouchableOpacity>
+
+          
         </View>
 
 
@@ -244,12 +258,16 @@ export default function RestaurantDetails({ route }) {
 
 
 
-          </Modal>}
+          </Modal>
+}
         </View>
       </View>
-    </SafeAreaView>
-  );
-}
+     
+</SafeAreaView>
+ )
+
+
+
 
 const styles = StyleSheet.create({
   header: {
@@ -259,67 +277,44 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     display: "flex",
   },
-  inputControl: {
-    height: 25,
-    backgroundColor: Colors.DEFAULT_WHITE,
-    borderColor: Colors.DEFAULT_RED,
-    borderWidth: 1,
-    paddingHorizontal: 16,
-    fontSize: 15,
-    fontWeight: '500',
-    color: Colors.DEFAULT_WHITE,
-  },
-  inputControlGuest: {
-    height: 25,
-    backgroundColor: Colors.DEFAULT_WHITE,
-    borderColor: Colors.DEFAULT_RED,
-    borderWidth: 1,
-    paddingHorizontal: 16,
-    fontSize: 15,
-    fontWeight: '500',
-    color: Colors.DARK_ONE,
-  },
-
-  btn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 8,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    backgroundColor: Colors.DEFAULT_RED,
-    margin: 5
-  },
-  btnText: {
-    fontSize: 18,
-    lineHeight: 26,
-    fontWeight: '600',
-    color: '#fff',
-  },
-
   image: {
     width: Dimensions.get("window").width,
-    height: 250,
+    height: 480,
   },
   name: {
-
-    color: Colors.DEFAULT_WHITE,
+  
+    color: "White",
     fontWeight: "bold",
     alignItems: "center",
     justifyContent: "center",
   },
   category: {
-    color: "gray",
+    color: "black",
+    paddingVertical:6,
+    fontSize:14,    
+  },
+  categoryContainer: {
+    backgroundColor:'rgba(255, 255, 255, 0.7)',
+    width:80,
+    alignItems:'center',
+    justifyContent:'center',
+    borderRadius:8
+    
   },
   description: {
     color: "gray",
   },
-  menuImage: {
-    height: 100,
-    width: "80%",
+
+  ratingText: {
+    color: "white",
   },
-  rating: {
-    color: "gray",
+  ratingContainer: {
+    backgroundColor: "rgba(0,0,0,0.3)",
+    width:"100%",
+    paddingLeft:8,
+    position:'absolute',
+    bottom:0,
+    left:0,
   },
   openingHours: {
     color: "gray",
@@ -333,72 +328,4 @@ const styles = StyleSheet.create({
     borderRadius: 80,
   },
 
-  selectValue: {
-    color: "#6f7482",
-    fontSize: 16,
-    fontFamily: "IBMPlexSans-Regular",
-  },
-  selectLayout: {
-    height: 68,
-    width: 318,
-    left: 44,
-    position: "absolute",
-  },
-  confirmFlexBox: {
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  textInput: {
-    top: 35,
-  },
-  textInput1: {
-    top: 131,
-    height: 73,
-    width: 318,
-    left: 44,
-    position: "absolute",
-  },
-  select: {
-    top: 231,
-    overflow: "hidden",
-  },
-  confirm: {
-    fontSize: FontSize.paragraphIBMPlexSansRegular_size,
-    letterSpacing: -0.2,
-    lineHeight: 24,
-    fontWeight: "700",
-    fontFamily: FontFamily.interBold,
-    color: Colors.DEFAULT_WHITE,
-    textAlign: "center",
-    display: "flex",
-    width: 87,
-  },
-  confirmWrapper: {
-    top: 340,
-    left: 139,
-    borderRadius: Border.br_base,
-    backgroundColor: Color.colorRed,
-    width: 123,
-    height: 55,
-    flexDirection: "row",
-    paddingHorizontal: Padding.p_119xl,
-    paddingVertical: Padding.p_base,
-    position: "absolute",
-    alignItems: "center",
-  },
-  framePop: {
-    backgroundColor: "#131313",
-    width: 402,
-    height: 423,
-    overflow: "hidden",
-  },
-
-
-
-
-
 });
-
-
-
-
