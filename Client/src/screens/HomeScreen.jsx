@@ -97,6 +97,7 @@ export default function HomeScreen({ navigation, route }) {
           <View style={styles.ActiveCategory}>
             <TouchableOpacity style={styles.CategoryStyleView}>
               <Text style={styles.CategoryText}>category 1</Text>
+
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -158,5 +159,6 @@ const styles = StyleSheet.create({
   },
   CategoryStyleView: {
     flex: 1,
+    display: "grid"
   },
 });
