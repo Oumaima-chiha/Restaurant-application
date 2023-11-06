@@ -197,7 +197,7 @@ export default function RestaurantDetails({ route }) {
           {showForm && <Modal transparent={true} visible={true} onPress={toggleForm} >
 
 
-            <Pressable style={{ backgroundColor: '#000000aa', flex: 1 }} >
+            <Pressable style={{ backgroundColor: '#000000aa', flex: 1 }} onPress={toggleForm}>
               {showToast && (
                 <ToastMessage
                   ref={toastRef}

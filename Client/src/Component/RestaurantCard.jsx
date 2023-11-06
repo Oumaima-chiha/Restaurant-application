@@ -10,12 +10,14 @@ export default function RestaurantCard({ restaurant, onPress }) {
     console.log(restaurant)
   };
 
+  const spaced = category.toString().split(',').join('  ')
+
   return (
     <TouchableOpacity onPress={handleButtonPress}>
       <View style={styles.cardContainer}>
         <Image source={{ uri: main_image.trim() }} style={styles.cardImage} />
         <Text style={styles.cardName}>{name}</Text>
-        <Text style={styles.cardCategory}>{category}</Text>
+        <Text style={styles.cardCategory}>{spaced}</Text>
         <Text style={styles.cardRating}>{`Rating: ${'4.0'}`}</Text>
 
         <Text style={styles.cardStatus}>{'Open'}</Text>
