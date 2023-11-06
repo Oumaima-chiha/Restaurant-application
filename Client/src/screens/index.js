@@ -11,8 +11,6 @@ import ForgetPasswordEmail from "./ForgetPasswordEmail";
 import VerificationCodeScreen from "./VerificationCodeScreen";
 import NewPasswordScreen from "./NewPasswordScreen.jsx";
 import RegisterScreen from "./RegisterScreen.jsx";
-
-
 import Upcoming from './Upcoming.jsx'
 import History from './History.jsx'
 import MenuContainer from "./MenuContainer";
