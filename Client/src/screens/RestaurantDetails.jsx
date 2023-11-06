@@ -23,6 +23,7 @@ import axios from "axios";
 import ToastMessage from "../Component/ToastMessage";
 import moment from 'moment'
 import { AntDesign } from '@expo/vector-icons';
+import { Display } from "../utils";
 
 
 
@@ -163,9 +164,20 @@ export default function RestaurantDetails({ route }) {
 
     <View style={styles.ScreenContainer}>
 
+
+
       <View>
 
+
         <Image source={{ uri: main_image.trim() }} style={styles.image} />
+        {showToast2 && (
+          <ToastMessage
+            ref={toastRef}
+            type="success"
+            text={spotsRemaining}
+            timeout={3000}
+          />
+        )}
 
         <View style={styles.ratingContainer}>
 
@@ -202,14 +214,7 @@ export default function RestaurantDetails({ route }) {
 
         </View>
 
-        {showToast2 && (
-          <ToastMessage
-            ref={toastRef}
-            type="success"
-            text={spotsRemaining}
-            timeout={3000}
-          />
-        )}
+
         <Text
           style={styles.openingHours}
         >{` ${moment(opening_time).format('LT')} - ${moment(closing_time).format('LT')}`}</Text>
@@ -222,6 +227,7 @@ export default function RestaurantDetails({ route }) {
           gap: 5
 
         }}>
+
           <Image source={Images.PINICON} style={styles.icon} />
           <Text
             style={styles.openingHours}
@@ -237,6 +243,7 @@ export default function RestaurantDetails({ route }) {
           </TouchableOpacity>
         </View>
 
+
         {showForm && <Modal transparent={true} visible={true} onPress={toggleForm} >
 
 
@@ -250,6 +257,7 @@ export default function RestaurantDetails({ route }) {
                 timeout={3000}
               />
             )}
+
 
 
 
@@ -390,8 +398,8 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    width: Dimensions.get("window").width,
-    height: 480,
+    height: Display.setHeight(40),
+    width: Display.setWidth(100),
   },
   name: {
 
