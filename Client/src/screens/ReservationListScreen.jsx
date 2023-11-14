@@ -14,13 +14,7 @@ const marginTop = Display.setHeight(marginTopPercentage);
 const Tab = createMaterialTopTabNavigator();
 
 function MyTabs() {
-
-
-
-
-
-
-  return (
+eturn (
 
 
     <Tab.Navigator style={styles.tabBarStyle}>
